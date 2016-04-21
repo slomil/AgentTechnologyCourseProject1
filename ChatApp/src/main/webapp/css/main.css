@@ -1,0 +1,185 @@
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+body {
+    background-color: #E9E9E9;
+}
+
+#Content {
+    background-color: #FFFFFF;
+    min-height: 100%;
+}
+
+#SignUp, #Login {
+    width: 500px;
+    margin: 50px auto 75px auto;
+    background-color: #F7F7F7;
+    border-radius: 15px;
+    box-shadow: 0 0 10px 5px #AFAFAF;
+}
+
+#SignUpButton {
+    width: 370px;
+}
+
+#LoginButton {
+    width: 100%;
+}
+
+.m-5 {
+    margin: 5px;
+}
+
+.tm-5 {
+    margin: 5px;
+}
+
+.bm-0 {
+    margin-bottom: 0;
+}
+
+.rm-5 {
+    margin-right: 5px;
+}
+
+.lm-5 {
+    margin-left: 5px;
+}
+
+.rm-10 {
+    margin-right: 10px;
+}
+
+.rlm-15 {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.rm-20 {
+    margin-right: 20px;
+}
+
+.lm-20 {
+    margin-left: 20px;
+}
+
+.tm-5 {
+    margin-top: 5px;
+}
+
+.tm-10 {
+    margin-top: 10px;
+}
+
+.tm-20 {
+    margin-top: 20px;
+}
+.bm-10 {
+    margin-bottom: 10px;
+}
+.bm-20 {
+    margin-bottom: 20px;
+}
+.tm-30 {
+    margin-top: 30px;
+}
+.tm-50 {
+    margin-top: 50px;
+}
+
+.tm-75 {
+    margin-top: 75px;
+}
+
+.ta-mid {
+    text-align: center;
+}
+
+.p-0 {
+    padding: 0px;
+}
+
+.plr-50 {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.options-header {
+    width: 130px;
+}
+
+.options-header-sm {
+    width: 70px;
+}
+
+
+.option-button {
+    width: 65px;
+}
+
+.table-cell-align {
+    vertical-align: middle !important;
+    text-align: center;
+}
+
+.table-button {
+    width: 60px;
+}
+
+.edit-modal {
+    padding: 10px 20px 20px 20px;
+}
+
+.input-description {
+    width: 115px !important;
+    text-align: right;
+}
+
+.input-description-80 {
+    width: 80px !important;
+    text-align: right;
+}
+
+.input-description-100 {
+    width: 100px !important;
+    text-align: right;
+}
+
+.input-description-110 {
+    width: 110px !important;
+    text-align: right;
+}
+
+.input-description-135 {
+    width: 135px !important;
+    text-align: right;
+}
+
+.input-container {
+    width: 100%;
+}
+
+.rating-header {
+    text-align: center;
+    width: 125px;
+}
+
+.button-header {
+    text-align: center;
+    width: 90px;
+}
+
+.table-reserved {
+    background-color: #C9302C;
+}
+
+.table-table, .table-free {
+    background-color: #286090;
+    color: #FFFFFF;;
+}
+
+.table-selected {
+    background-color: #449D44;
+}
+
+.table-no_table {
+    background-color: #F8F8F8;
+}

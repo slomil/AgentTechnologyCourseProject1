@@ -1,0 +1,32 @@
+<div id="SignUp">
+    <div class="panel-body">
+        <div class="ta-mid plr-50">
+            <h3>Create a new account</h3>
+            <uib-alert type="danger" ng-if="alertMessage">{{alertMessage}}</uib-alert>
+
+            <!-- First name -->
+            <div class="input-group input-group-lg tm-10">
+                <span class="input-group-addon glyphicon glyphicon-user" id="username_lbl" style="top: 0;"></span>
+                <input name="username" id="username_input" type="text" class="form-control" ng-model="username"
+                       placeholder="username" aria-describedby="username_lbl">
+            </div>
+            
+            <!-- Password -->
+            <div class="input-group input-group-lg tm-10">
+                <span class="input-group-addon glyphicon glyphicon-lock" id="passowrd_lbl" style="top: 0;"></span>
+                <input name="password" id="password_input" type="password" class="form-control" ng-model="password"
+                       placeholder="password" aria-describedby="passowrd_lbl">
+            </div>
+
+            <!-- Re-enter password -->
+            <div class="input-group input-group-lg tm-10">
+                <span class="input-group-addon glyphicon glyphicon-lock" id="reenter_passowrd_lbl" style="top: 0;"></span>
+                <input name="renteredPassword" id="reenter_password_input" type="password" class="form-control"
+                       ng-model="renteredPassword" placeholder="re-enter password" aria-describedby="reenter_passowrd_lbl">
+            </div>
+
+            <button id="SignUpButton" type="button" class="btn btn-success btn-lg tm-10" ng-click="signup()">Sign Up
+            </button>
+        </div>
+    </div>
+</div>
