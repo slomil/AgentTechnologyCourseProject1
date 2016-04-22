@@ -1,4 +1,4 @@
-package com.ftn.informatika.agents.chat_app.util;
+package exception;
 
 /**
  * @author - Srđan Milaković

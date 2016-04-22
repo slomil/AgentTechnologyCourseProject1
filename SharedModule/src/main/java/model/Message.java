@@ -1,11 +1,12 @@
-package com.ftn.informatika.agents.chat_app.model;
+package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author - Srđan Milaković
  */
-public class Message {
+public class Message implements Serializable {
     private User from;
     private User to;
     private Date date;
@@ -62,4 +63,6 @@ public class Message {
     public void setContent(String content) {
         this.content = content;
     }
+
+
 }
