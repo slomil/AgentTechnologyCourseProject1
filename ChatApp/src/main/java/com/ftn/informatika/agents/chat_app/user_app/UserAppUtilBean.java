@@ -1,59 +1,61 @@
 package com.ftn.informatika.agents.chat_app.user_app;
 
+import JmsMessages.RegisterMessage;
+import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
 import exception.UsernameExistsException;
 import model.User;
 import org.apache.http.auth.InvalidCredentialsException;
+import util.ObjectMessageSender;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author - Srđan Milaković
  */
 @Stateless
-public class UserAppUtilBean implements UserAppUtilLocal {
+public class UserAppUtilBean extends ObjectMessageSender implements UserAppUtilLocal {
+
+    @EJB
+    private ServerManagementLocal serverManagementBean;
 
     @Resource(mappedName = "java:/ConnectionFactory")
-    private QueueConnectionFactory connectionFactory;
-    @Resource(mappedName = "java:/jms/queue/UserApp")
+    private ConnectionFactory connectionFactory;
+    @Resource(mappedName = "java:jboss/jms/queue/UserApp")
     private Queue queue;
 
     @Override
-    public User register(String username, String password) throws UsernameExistsException {
-        try {
-            QueueConnection connection = connectionFactory.createQueueConnection();
-            QueueSession session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-            connection.start();
-
-            QueueRequestor requestor = new QueueRequestor(session, queue);
-            ObjectMessage message = session.createObjectMessage(new User("Username", "Password"));
-            TextMessage response = (TextMessage) requestor.request(message);
-            System.out.println(response.getText());
-            requestor.close();
-            connection.stop();
-            connection.close();
-
-        } catch (JMSException e) {
-            e.printStackTrace();
+    public boolean register(String username, String password) throws UsernameExistsException {
+        if (serverManagementBean.isMaster()) {
+            try {
+                sendObject(connectionFactory, queue, new RegisterMessage(username, password));
+            } catch (JMSException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            // TODO: RestEasyClient
         }
 
-        return null;
+        return true;
     }
 
     @Override
-    public Boolean login(String username, String password) throws InvalidCredentialsException {
-        return null;
+    public boolean login(String username, String password) throws InvalidCredentialsException {
+        return false;
     }
 
     @Override
-    public Boolean logout(User logout) {
-        return null;
+    public boolean logout(User logout) {
+        return false;
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return null;
+    public boolean getAllUsers() {
+        return false;
     }
 }

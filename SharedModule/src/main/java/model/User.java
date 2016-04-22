@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class User implements Serializable {
     private String username;
     private String password;
-    private String host;
+    private Host host;
 
     public User() {
     }
@@ -17,7 +17,7 @@ public class User implements Serializable {
         this(username, password, null);
     }
 
-    public User(String username, String password, String host) {
+    public User(String username, String password, Host host) {
         this.username = username;
         this.password = password;
         this.host = host;
@@ -39,11 +39,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getHost() {
+    public Host getHost() {
         return host;
     }
 
-    public void setHost(String host) {
+    public void setHost(Host host) {
         this.host = host;
     }
 

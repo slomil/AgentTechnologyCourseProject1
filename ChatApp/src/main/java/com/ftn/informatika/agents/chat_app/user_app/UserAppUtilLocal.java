@@ -14,8 +14,8 @@ import java.util.List;
  */
 @Local
 public interface UserAppUtilLocal {
-    User register(String username, String password) throws UsernameExistsException;
-    Boolean login(String username, String password) throws InvalidCredentialsException;
-    Boolean logout(User logout);
-    List<User> getAllUsers();
+    boolean register(String username, String password) throws UsernameExistsException;
+    boolean login(String username, String password) throws InvalidCredentialsException;
+    boolean logout(User logout);
+    boolean getAllUsers();
 }

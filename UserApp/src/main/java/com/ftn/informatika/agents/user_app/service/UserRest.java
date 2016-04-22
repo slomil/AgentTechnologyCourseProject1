@@ -1,5 +1,6 @@
 package com.ftn.informatika.agents.user_app.service;
 
+import com.ftn.informatika.agents.user_app.bean.UserDbLocal;
 import exception.AlreadyRegisteredException;
 import exception.InsufficientDataException;
 import exception.InvalidCredentialsException;
@@ -7,35 +8,50 @@ import exception.UsernameExistsException;
 import model.Host;
 import model.User;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ejb.EJB;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
  * @author - Srđan Milaković
  */
-@Path("/api")
+@Path("/")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class UserRest {
 
+    @EJB
+    private UserDbLocal userDbBean;
+
+    @POST
     @Path("/register")
-    User register(@QueryParam("username") String username, @QueryParam("password") String password)
+    public User register(@QueryParam("username") String username, @QueryParam("password") String password)
             throws UsernameExistsException, InsufficientDataException {
-
+        return userDbBean.register(username, password);
     }
 
+    @POST
     @Path("/login")
-    Boolean login(@QueryParam("username") String username, String password, Host host)
+    public Boolean login(@QueryParam("username") String username, @QueryParam("password") String password,
+                  @QueryParam("hostAddress") String hostAddress, @QueryParam("hostAlias") String hostAlias)
             throws InvalidCredentialsException, InsufficientDataException, AlreadyRegisteredException {
+        if (hostAddress == null || hostAlias == null) {
+            throw new InsufficientDataException();
+        }
 
+        return userDbBean.login(username, password, new Host(hostAddress, hostAlias));
     }
 
+    @POST
     @Path("/logout")
-    Boolean logout(User logout) {
-
+    public Boolean logout(User user) {
+        return userDbBean.logout(user);
     }
 
+    @POST
     @Path("/users")
-    List<User> getAllUsers() {
-
+    public List<User> getAllUsers() {
+        return userDbBean.getAllUsers();
     }
 }

@@ -29,11 +29,9 @@ public class WebSocketEndpoint {
     public void onMessage(String message, Session session) {
         try {
             if (session.isOpen()) {
-                User user = new User();
-                System.out.println(user);
                 userAppUtilBean.register("a", "b");
                 System.out.println("WebSocketEndpoint receiver message:" + message);
-                SocketPacket socketPacket = new Gson().fromJson(message, SocketPacket.class);
+                RequestPacket requestPacket = new Gson().fromJson(message, RequestPacket.class);
                 session.getBasicRemote().sendText("Hello from " + WebSocketEndpoint.class.getSimpleName());
             }
         } catch (IOException e) {

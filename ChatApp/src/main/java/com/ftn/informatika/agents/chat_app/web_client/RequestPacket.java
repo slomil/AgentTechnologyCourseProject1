@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 /**
  * @author - Srđan Milaković
  */
-public class SocketPacket {
+public class RequestPacket {
     public static final String LOGIN = "login";
     public static final String REGISTER = "register";
     public static final String LOGOUT = "logout";
@@ -14,15 +14,15 @@ public class SocketPacket {
     private String type;
     private String payload;
 
-    public SocketPacket() {
+    public RequestPacket() {
     }
 
-    public SocketPacket(String type, String payload) {
+    public RequestPacket(String type, String payload) {
         this.type = type;
         this.payload = payload;
     }
 
-    public SocketPacket(String type, Object payload) {
+    public RequestPacket(String type, Object payload) {
         this.type = type;
         this.payload = new Gson().toJson(payload);
     }

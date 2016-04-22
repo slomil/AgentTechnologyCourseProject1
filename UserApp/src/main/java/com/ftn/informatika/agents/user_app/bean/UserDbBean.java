@@ -46,13 +46,15 @@ public class UserDbBean implements UserDbLocal {
         }
 
         User user = users.get(username);
-        if (!password.equals(user.getPassword())) {
+        if (user == null || !password.equals(user.getPassword())) {
             throw new InvalidCredentialsException();
         }
 
         if (activeUsers.get(username) != null) {
             throw new AlreadyRegisteredException();
         }
+
+        activeUsers.put(user.getUsername(), new User(username, password, host));
 
         return true;
     }
