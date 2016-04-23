@@ -2,7 +2,8 @@ package com.ftn.informatika.agents.chat_app.web_client;
 
 import com.ftn.informatika.agents.chat_app.user_app.UserAppUtilLocal;
 import com.google.gson.Gson;
-import com.ftn.informatika.agents.exception.UsernameExistsException;
+import exception.UsernameExistsException;
+import model.User;
 
 import javax.ejb.EJB;
 import javax.ejb.Singleton;

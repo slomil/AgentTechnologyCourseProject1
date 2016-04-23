@@ -1,6 +1,6 @@
-package com.ftn.informatika.agents.jms_messages;
+package JmsMessages;
 
-import com.ftn.informatika.agents.model.User;
+import model.User;
 
 /**
  * @author - Srđan Milaković

@@ -1,4 +1,4 @@
-package com.ftn.informatika.agents.exception;
+package exception;
 
 /**
  * @author - Srđan Milaković

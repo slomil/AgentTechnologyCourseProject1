@@ -1,4 +1,6 @@
-package com.ftn.informatika.agents.jms_messages;
+package JmsMessages;
+
+import java.io.Serializable;
 
 /**
  * @author - Srđan Milaković

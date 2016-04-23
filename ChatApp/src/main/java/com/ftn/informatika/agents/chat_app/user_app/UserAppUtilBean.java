@@ -1,16 +1,18 @@
 package com.ftn.informatika.agents.chat_app.user_app;
 
-import com.ftn.informatika.agents.jms_messages.RegisterMessage;
+import JmsMessages.RegisterMessage;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
-import com.ftn.informatika.agents.exception.UsernameExistsException;
-import com.ftn.informatika.agents.model.User;
+import exception.UsernameExistsException;
+import model.User;
 import org.apache.http.auth.InvalidCredentialsException;
-import com.ftn.informatika.agents.util.ObjectMessageSender;
+import util.ObjectMessageSender;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.*;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author - Srđan Milaković
