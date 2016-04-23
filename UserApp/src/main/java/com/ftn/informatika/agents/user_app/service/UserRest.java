@@ -1,12 +1,12 @@
 package com.ftn.informatika.agents.user_app.service;
 
 import com.ftn.informatika.agents.user_app.bean.UserDbLocal;
-import exception.AlreadyRegisteredException;
-import exception.InsufficientDataException;
-import exception.InvalidCredentialsException;
-import exception.UsernameExistsException;
-import model.Host;
-import model.User;
+import com.ftn.informatika.agents.exception.AlreadyRegisteredException;
+import com.ftn.informatika.agents.exception.InsufficientDataException;
+import com.ftn.informatika.agents.exception.InvalidCredentialsException;
+import com.ftn.informatika.agents.exception.UsernameExistsException;
+import com.ftn.informatika.agents.model.Host;
+import com.ftn.informatika.agents.model.User;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;

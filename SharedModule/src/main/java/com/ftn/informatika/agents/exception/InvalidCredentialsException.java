@@ -1,6 +1,4 @@
-package exception;
-
-import java.security.spec.ECFieldF2m;
+package com.ftn.informatika.agents.exception;
 
 /**
  * @author - Srđan Milaković

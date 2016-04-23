@@ -1,11 +1,8 @@
 package com.ftn.informatika.agents.user_app.bean;
 
-import exception.AlreadyRegisteredException;
-import exception.InsufficientDataException;
-import exception.InvalidCredentialsException;
-import exception.UsernameExistsException;
-import model.Host;
-import model.User;
+import com.ftn.informatika.agents.exception.*;
+import com.ftn.informatika.agents.model.Host;
+import com.ftn.informatika.agents.model.User;
 
 import javax.ejb.*;
 import java.util.*;
@@ -33,13 +30,12 @@ public class UserDbBean implements UserDbLocal {
 
         User user = new User(username, password);
         users.put(username, user);
-
         return user;
     }
 
     @Override
     @Lock(LockType.WRITE)
-    public Boolean login(String username, String password, Host host)
+    public User login(String username, String password, Host host)
             throws InvalidCredentialsException, InsufficientDataException, AlreadyRegisteredException {
         if (username == null || password == null) {
             throw new InsufficientDataException();
@@ -55,14 +51,15 @@ public class UserDbBean implements UserDbLocal {
         }
 
         activeUsers.put(user.getUsername(), new User(username, password, host));
-
-        return true;
+        return user;
     }
 
     @Override
     @Lock(LockType.WRITE)
-    public Boolean logout(User user) {
-        return activeUsers.remove(user.getUsername()) != null;
+    public void logout(User user) throws UserInactiveException {
+        if (activeUsers.remove(user.getUsername()) == null) {
+            throw new UserInactiveException();
+        }
     }
 
     @Override

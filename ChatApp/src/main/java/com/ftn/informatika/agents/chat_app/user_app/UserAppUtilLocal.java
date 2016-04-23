@@ -2,12 +2,11 @@ package com.ftn.informatika.agents.chat_app.user_app;
 
 
 
-import exception.UsernameExistsException;
-import model.User;
+import com.ftn.informatika.agents.exception.UsernameExistsException;
+import com.ftn.informatika.agents.model.User;
 import org.apache.http.auth.InvalidCredentialsException;
 
 import javax.ejb.Local;
-import java.util.List;
 
 /**
  * @author - Srđan Milaković
