@@ -1,4 +1,4 @@
-package com.ftn.informatika.agents.user_app.service;
+package com.ftn.informatika.agents.user_app.endpoint;
 
 import com.ftn.informatika.agents.exception.*;
 import com.ftn.informatika.agents.jms_messages.*;
@@ -23,7 +23,7 @@ import java.util.List;
                 @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/UserAppQueue")
         }
 )
-public class UserSenderMDBean extends ObjectMessageSender implements MessageListener {
+public class MDBeanEndpoint extends ObjectMessageSender implements MessageListener {
 
     @EJB
     private UserDbLocal userDbBean;

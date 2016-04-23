@@ -1,5 +1,7 @@
 package com.ftn.informatika.agents.chat_app.util;
 
+import com.ftn.informatika.agents.chat_app.cluster_management.RestRequesterLocal;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.*;
@@ -12,8 +14,11 @@ import java.util.Collections;
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Startup
 @Singleton
-public class ServerManagement implements ServerManagementLocal {
+public class ServerManagementBean implements ServerManagementLocal {
     private static final String MASTER_ADDRESS_KEY = "master";
+
+    @EJB
+    private RestRequesterLocal restRequesterBean;
 
     private String masterAddress;
     private String localAddress;
@@ -34,6 +39,11 @@ public class ServerManagement implements ServerManagementLocal {
             System.out.println("Local host name: " + (localHostName = local.getHostName()));
         } catch (UnknownHostException e) {
             System.out.println("Can't read local IPv4 address.");
+        }
+
+        // Register to master node
+        if (masterAddress != null) {
+            restRequesterBean.register(masterAddress, localAddress, localHostName);
         }
     }
 

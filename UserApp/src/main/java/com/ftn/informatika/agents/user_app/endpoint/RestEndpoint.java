@@ -1,4 +1,4 @@
-package com.ftn.informatika.agents.user_app.service;
+package com.ftn.informatika.agents.user_app.endpoint;
 
 import com.ftn.informatika.agents.exception.*;
 import com.ftn.informatika.agents.user_app.bean.UserDbLocal;
@@ -16,7 +16,7 @@ import java.util.List;
 @Path("/")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class UserRest {
+public class RestEndpoint {
 
     @EJB
     private UserDbLocal userDbBean;
