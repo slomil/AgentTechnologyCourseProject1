@@ -1,18 +1,16 @@
 package com.ftn.informatika.agents.chat_app.user_app;
 
-import JmsMessages.RegisterMessage;
+import com.ftn.informatika.agents.jms_messages.RegisterMessage;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
-import exception.UsernameExistsException;
-import model.User;
+import com.ftn.informatika.agents.exception.UsernameExistsException;
+import com.ftn.informatika.agents.model.User;
 import org.apache.http.auth.InvalidCredentialsException;
-import util.ObjectMessageSender;
+import com.ftn.informatika.agents.util.ObjectMessageSender;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.*;
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author - Srđan Milaković
@@ -32,7 +30,7 @@ public class UserAppUtilBean extends ObjectMessageSender implements UserAppUtilL
     public boolean register(String username, String password) throws UsernameExistsException {
         if (serverManagementBean.isMaster()) {
             try {
-                sendObject(connectionFactory, queue, new RegisterMessage(username, password));
+                sendObject(new RegisterMessage(username, password));
             } catch (JMSException e) {
                 e.printStackTrace();
                 return false;
@@ -57,5 +55,15 @@ public class UserAppUtilBean extends ObjectMessageSender implements UserAppUtilL
     @Override
     public boolean getAllUsers() {
         return false;
+    }
+
+    @Override
+    protected ConnectionFactory getConnectionFactory() {
+        return connectionFactory;
+    }
+
+    @Override
+    protected Queue getQueue() {
+        return queue;
     }
 }

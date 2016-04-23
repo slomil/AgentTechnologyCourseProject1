@@ -1,4 +1,4 @@
-package JmsMessages;
+package com.ftn.informatika.agents.jms_messages;
 
 /**
  * @author - Srđan Milaković

@@ -1,6 +1,6 @@
-package JmsMessages;
+package com.ftn.informatika.agents.jms_messages;
 
-import model.Host;
+import com.ftn.informatika.agents.model.Host;
 
 /**
  * @author - Srđan Milaković

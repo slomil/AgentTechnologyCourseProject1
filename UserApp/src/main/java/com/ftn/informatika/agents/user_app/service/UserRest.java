@@ -1,12 +1,9 @@
 package com.ftn.informatika.agents.user_app.service;
 
+import com.ftn.informatika.agents.exception.*;
 import com.ftn.informatika.agents.user_app.bean.UserDbLocal;
-import exception.AlreadyRegisteredException;
-import exception.InsufficientDataException;
-import exception.InvalidCredentialsException;
-import exception.UsernameExistsException;
-import model.Host;
-import model.User;
+import com.ftn.informatika.agents.model.Host;
+import com.ftn.informatika.agents.model.User;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;
@@ -33,7 +30,7 @@ public class UserRest {
 
     @POST
     @Path("/login")
-    public Boolean login(@QueryParam("username") String username, @QueryParam("password") String password,
+    public User login(@QueryParam("username") String username, @QueryParam("password") String password,
                   @QueryParam("hostAddress") String hostAddress, @QueryParam("hostAlias") String hostAlias)
             throws InvalidCredentialsException, InsufficientDataException, AlreadyRegisteredException {
         if (hostAddress == null || hostAlias == null) {
@@ -46,7 +43,12 @@ public class UserRest {
     @POST
     @Path("/logout")
     public Boolean logout(User user) {
-        return userDbBean.logout(user);
+        try {
+            userDbBean.logout(user);
+            return true;
+        } catch (UserInactiveException e) {
+            return false;
+        }
     }
 
     @POST

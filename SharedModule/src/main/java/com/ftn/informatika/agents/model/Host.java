@@ -1,4 +1,4 @@
-package model;
+package com.ftn.informatika.agents.model;
 
 import java.io.Serializable;
 
