@@ -23,7 +23,7 @@ Set Host Name
 -Dalias=alias_value
 ```
 
-## Example (Windows)
+### Example (Windows)
 ```bash
 # Master Node
 .\standalone.bat -Djboss.server.default.config=standalone-agents.xml -Dlocal=192.168.0.1:8080 -Dalias=MasterNode
@@ -35,7 +35,7 @@ Set Host Name
 .\standalone.bat -Djboss.server.default.config=standalone-agents.xml -Djboss.socket.binding.port-offset=200 -master=192.168.0.1:8080
 ```
 
-## Example (Unix)
+### Example (Unix)
 ```bash
 # Master Node
 ./standalone.sh -Djboss.server.default.config=standalone-agents.xml -Dlocal=192.168.0.1:8080 -Dalias=MasterNode
