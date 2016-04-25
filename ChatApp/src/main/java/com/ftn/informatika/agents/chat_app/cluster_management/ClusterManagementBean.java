@@ -1,6 +1,5 @@
 package com.ftn.informatika.agents.chat_app.cluster_management;
 
-import com.ftn.informatika.agents.chat_app.cluster_management.util.RestRequester;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
 import com.ftn.informatika.agents.exception.AliasExistsException;
 import com.ftn.informatika.agents.exception.HostNotExistsException;
@@ -33,7 +32,7 @@ public class ClusterManagementBean implements ClusterManagementLocal {
             hostsDbBean.getHosts().forEach(h -> {
                 if (!serverManagementBean.getLocalAddress().equals(h.getAddress())) {
                     try {
-                        RestRequester.register(h.getAddress(), address, alias);
+                        ClusterManagementRequester.register(h.getAddress(), address, alias);
                     } catch (AliasExistsException e) {
                         System.err.println("Alias \"" + alias + "\" already exists.");
                     }
@@ -56,7 +55,7 @@ public class ClusterManagementBean implements ClusterManagementLocal {
             hostsDbBean.getHosts().forEach(h -> {
                 if (!serverManagementBean.getLocalAddress().equals(h.getAddress())) {
                     try {
-                        RestRequester.unregister(h.getAddress(), host);
+                        ClusterManagementRequester.unregister(h.getAddress(), host);
                     } catch (HostNotExistsException e) {
                         System.err.println("Host " + host + " does not exist.");
                     }

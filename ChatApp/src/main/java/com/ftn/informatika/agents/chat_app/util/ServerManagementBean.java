@@ -1,7 +1,8 @@
 package com.ftn.informatika.agents.chat_app.util;
 
 import com.ftn.informatika.agents.chat_app.cluster_management.HostsDbLocal;
-import com.ftn.informatika.agents.chat_app.cluster_management.util.RestRequester;
+import com.ftn.informatika.agents.chat_app.cluster_management.ClusterManagementRequester;
+import com.ftn.informatika.agents.chat_app.user_app.UserAppRequester;
 import com.ftn.informatika.agents.exception.AliasExistsException;
 import com.ftn.informatika.agents.exception.HostNotExistsException;
 import com.ftn.informatika.agents.model.Host;
@@ -74,7 +75,7 @@ public class ServerManagementBean implements ServerManagementLocal {
         // Register to master node
         if (!isMaster()) {
             try {
-                RestRequester.register(masterAddress, localAddress, hostName).forEach(h -> {
+                ClusterManagementRequester.register(masterAddress, localAddress, hostName).forEach(h -> {
                     try {
                         hostsDbBean.addHost(h);
                     } catch (AliasExistsException e) {
@@ -100,7 +101,7 @@ public class ServerManagementBean implements ServerManagementLocal {
         // Unregister
         if (!isMaster()) {
             try {
-                RestRequester.unregister(masterAddress, localHost);
+                ClusterManagementRequester.unregister(masterAddress, localHost);
             } catch (HostNotExistsException e) {
                 System.err.println("Host \"" + localHost + "\" does not exist.");
             } catch (Exception e) {
