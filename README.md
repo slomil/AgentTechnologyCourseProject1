@@ -23,26 +23,15 @@ Set Host Name
 -Dalias=alias_value
 ```
 
-### Example (Windows)
+### Example
 ```bash
 # Master Node
-.\standalone.bat -Djboss.server.default.config=standalone-agents.xml -Dlocal=192.168.0.1:8080 -Dalias=MasterNode
+.\standalone.bat -D"jboss.server.default.config"=standalone-agents.xml -Dlocal="192.168.0.1:8080" -D"alias=MasterNode"
 
 # Slave Node 1
-.\standalone.bat -Djboss.server.default.config=standalone-agents.xml -Djboss.socket.binding.port-offset=100 -master=192.168.0.1:8080 -Dalias=SlaveNode1
+.\standalone.bat -D"jboss.server.default.config"=standalone-agents.xml -D"jboss.socket.binding.port-offset"=100 -Dmaster="192.168.0.1:8080" -Dalias=SlaveNode1
 
 # Slave Node 2
-.\standalone.bat -Djboss.server.default.config=standalone-agents.xml -Djboss.socket.binding.port-offset=200 -master=192.168.0.1:8080
-```
+.\standalone.bat -D"jboss.server.default.config"=standalone-agents.xml -D"jboss.socket.binding.port-offset"=200 -Dmaster="192.168.0.1:8080"
 
-### Example (Unix)
-```bash
-# Master Node
-./standalone.sh -Djboss.server.default.config=standalone-agents.xml -Dlocal=192.168.0.1:8080 -Dalias=MasterNode
-
-# Slave Node 1
-./standalone.sh -Djboss.server.default.config=standalone-agents.xml -Djboss.socket.binding.port-offset=100 -master=192.168.0.1:8080 -Dalias=SlaveNode1
-
-# Slave Node 2
-./standalone.sh -Djboss.server.default.config=standalone-agents.xml -Djboss.socket.binding.port-offset=200 -master=192.168.0.1:8080
 ```
