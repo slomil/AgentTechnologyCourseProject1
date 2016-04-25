@@ -1,59 +1,74 @@
 package com.ftn.informatika.agents.chat_app.cluster_management;
 
+import com.ftn.informatika.agents.chat_app.cluster_management.util.RestRequester;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
 import com.ftn.informatika.agents.exception.AliasExistsException;
 import com.ftn.informatika.agents.exception.HostNotExistsException;
 import com.ftn.informatika.agents.model.Host;
 
 import javax.ejb.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author - Srđan Milaković
  */
 
-@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
-@Singleton
+@Stateless
 public class ClusterManagementBean implements ClusterManagementLocal {
-
-    private Map<String, Host> hosts = new HashMap<>();
 
     @EJB
     private ServerManagementLocal serverManagementBean;
+    @EJB
+    private HostsDbLocal hostsDbBean;
 
-
-    @Lock(LockType.WRITE)
     @Override
     public List<Host> register(String address, String alias) throws AliasExistsException {
-        if (hosts.containsKey(address)) {
+        Host host = new Host(address, alias);
+        if (hostsDbBean.containsHost(host)) {
             throw new AliasExistsException();
         }
 
+        // Notify other slave nodes
         if (serverManagementBean.isMaster()) {
-
+            hostsDbBean.getHosts().forEach(h -> {
+                if (!serverManagementBean.getLocalAddress().equals(h.getAddress())) {
+                    try {
+                        RestRequester.register(h.getAddress(), address, alias);
+                    } catch (AliasExistsException e) {
+                        System.err.println("Alias \"" + alias + "\" already exists.");
+                    }
+                }
+            });
         }
-        return null;
+
+        hostsDbBean.addHost(host);
+        System.out.println("Host \"" + host + "\" is registered to node \"" + serverManagementBean.getAlias() + "\".");
+
+        return hostsDbBean.getHosts();
     }
 
-    @Lock(LockType.WRITE)
     @Override
     public void unregister(Host host) throws HostNotExistsException {
+        hostsDbBean.removeHost(host);
 
+        // Unregister removed host from other slave hosts
+        if (serverManagementBean.isMaster()) {
+            hostsDbBean.getHosts().forEach(h -> {
+                if (!serverManagementBean.getLocalAddress().equals(h.getAddress())) {
+                    try {
+                        RestRequester.unregister(h.getAddress(), host);
+                    } catch (HostNotExistsException e) {
+                        System.err.println("Host " + host + " does not exist.");
+                    }
+                }
+            });
+        }
+
+        System.out.println("Host \"" + host + "\" is unregistered from node \"" + serverManagementBean.getAlias() + "\".");
     }
 
-    @Lock(LockType.READ)
     @Override
     public List<Host> getHosts() {
-        return new ArrayList<>(hosts.values());
+        return hostsDbBean.getHosts();
     }
-
-    private void notifySlaveNodes() {
-        hosts.values().forEach(h -> {
-
-        });
-    }
-
 }

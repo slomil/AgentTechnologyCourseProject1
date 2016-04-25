@@ -1,5 +1,7 @@
 package com.ftn.informatika.agents.chat_app.util;
 
+import com.ftn.informatika.agents.model.Host;
+
 import javax.ejb.Local;
 
 /**
@@ -8,7 +10,8 @@ import javax.ejb.Local;
 @Local
 public interface ServerManagementLocal {
     String getMasterAddress();
+    Host getHost();
     String getLocalAddress();
-    String getLocalHostName();
+    String getAlias();
     boolean isMaster();
 }

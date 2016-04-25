@@ -450,13 +450,4 @@
             <remote-destination host="localhost" port="25"/>
         </outbound-socket-binding>
     </socket-binding-group>
-
-    <deployments>
-        <deployment name="chat_app.war" runtime-name="chat_app.war">
-            <fs-archive path="E:\Fakultet\AgentsCourseProject\ChatApp\target\chat_app.war"/>
-        </deployment>
-        <deployment name="user_app.war" runtime-name="user_app.war">
-            <fs-archive path="E:\Fakultet\AgentsCourseProject\UserApp\target\user_app.war"/>
-        </deployment>
-    </deployments>
 </server>
