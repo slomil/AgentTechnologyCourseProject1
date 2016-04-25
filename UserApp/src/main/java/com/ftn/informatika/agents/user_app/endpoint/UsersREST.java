@@ -8,6 +8,7 @@ import com.ftn.informatika.agents.user_app.bean.UserDbLocal;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,6 +47,7 @@ public class UsersREST implements UsersEndpoint {
 
     @Override
     public List<User> getAllUsers() {
-        return userDbBean.getAllUsers();
+        //return userDbBean.getAllUsers();
+        return Arrays.asList(new User("a", "a"), new User("b", "b"));
     }
 }

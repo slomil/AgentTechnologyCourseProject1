@@ -1,4 +1,4 @@
-package com.ftn.informatika.agents.chat_app.user_app;
+package com.ftn.informatika.agents.chat_app.users;
 
 import com.ftn.informatika.agents.exception.AlreadyRegisteredException;
 import com.ftn.informatika.agents.exception.InsufficientDataException;

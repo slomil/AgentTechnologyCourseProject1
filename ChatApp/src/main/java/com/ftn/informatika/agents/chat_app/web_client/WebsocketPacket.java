@@ -5,26 +5,30 @@ import com.google.gson.Gson;
 /**
  * @author - Srđan Milaković
  */
-public class RequestPacket {
+public class WebsocketPacket {
     public static final String LOGIN = "login";
     public static final String REGISTER = "register";
     public static final String LOGOUT = "logout";
     public static final String MESSAGE = "message";
+    public static final String USERS = "users";
+    public static final String NEW_USER = "new_user";
+    public static final String REMOVED_USER = "removed_user";
 
     private String type;
     private String payload;
+    private Boolean success;
 
-    public RequestPacket() {
+    public WebsocketPacket() {
     }
 
-    public RequestPacket(String type, String payload) {
+    public WebsocketPacket(String type, String payload, Boolean success) {
         this.type = type;
         this.payload = payload;
+        this.success = success;
     }
 
-    public RequestPacket(String type, Object payload) {
-        this.type = type;
-        this.payload = new Gson().toJson(payload);
+    public WebsocketPacket(String type, Object payload, Boolean success) {
+        this(type, new Gson().toJson(payload), success);
     }
 
     public String getType() {
@@ -41,5 +45,13 @@ public class RequestPacket {
 
     public void setPayload(String payload) {
         this.payload = payload;
+    }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
 }

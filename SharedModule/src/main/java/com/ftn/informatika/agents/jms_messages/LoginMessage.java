@@ -1,6 +1,7 @@
 package com.ftn.informatika.agents.jms_messages;
 
 import com.ftn.informatika.agents.model.Host;
+import com.ftn.informatika.agents.model.User;
 
 /**
  * @author - Srđan Milaković
@@ -9,6 +10,7 @@ public class LoginMessage extends JmsMessage {
     private String username;
     private String password;
     private Host host;
+    private User response;
 
     public LoginMessage() {
     }
@@ -41,5 +43,13 @@ public class LoginMessage extends JmsMessage {
 
     public void setHost(Host host) {
         this.host = host;
+    }
+
+    public User getResponse() {
+        return response;
+    }
+
+    public void setResponse(User response) {
+        this.response = response;
     }
 }

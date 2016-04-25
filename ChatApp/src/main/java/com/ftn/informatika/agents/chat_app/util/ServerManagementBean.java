@@ -1,8 +1,10 @@
 package com.ftn.informatika.agents.chat_app.util;
 
-import com.ftn.informatika.agents.chat_app.cluster_management.HostsDbLocal;
 import com.ftn.informatika.agents.chat_app.cluster_management.ClusterManagementRequester;
-import com.ftn.informatika.agents.chat_app.user_app.UserAppRequester;
+import com.ftn.informatika.agents.chat_app.cluster_management.HostsDbLocal;
+import com.ftn.informatika.agents.chat_app.users.UserAppJmsLocal;
+import com.ftn.informatika.agents.chat_app.users.UserAppRequester;
+import com.ftn.informatika.agents.chat_app.users.UsersDbLocal;
 import com.ftn.informatika.agents.exception.AliasExistsException;
 import com.ftn.informatika.agents.exception.HostNotExistsException;
 import com.ftn.informatika.agents.model.Host;
@@ -10,6 +12,7 @@ import com.ftn.informatika.agents.model.Host;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.*;
+import javax.jms.JMSException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -28,6 +31,10 @@ public class ServerManagementBean implements ServerManagementLocal {
 
     @EJB
     private HostsDbLocal hostsDbBean;
+    @EJB
+    private UsersDbLocal usersDbBean;
+    @EJB
+    private UserAppJmsLocal userAppJmsBean;
 
     private String masterAddress;
     private Host localHost;
@@ -73,8 +80,9 @@ public class ServerManagementBean implements ServerManagementLocal {
         localHost = new Host(localAddress, hostName);
 
         // Register to master node
-        if (!isMaster()) {
-            try {
+
+        try {
+            if (!isMaster()) {
                 ClusterManagementRequester.register(masterAddress, localAddress, hostName).forEach(h -> {
                     try {
                         hostsDbBean.addHost(h);
@@ -82,18 +90,26 @@ public class ServerManagementBean implements ServerManagementLocal {
                         System.err.println("Alias \"" + h.getAlias() + "\" already exists.");
                     }
                 });
-            } catch (AliasExistsException e) {
-                System.err.println("Can not register node. Alias \"" + localHost.getAlias() + "\" already exists.");
-            } catch (Exception e) {
+            } else {
+                hostsDbBean.addHost(localHost);
+            }
+        } catch (AliasExistsException e) {
+            System.err.println("Can not register node. Alias \"" + localHost.getAlias() + "\" already exists.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        if (isMaster()) {
+            try {
+                userAppJmsBean.getAllUsers();
+            } catch (JMSException e) {
                 e.printStackTrace();
             }
         } else {
-            try {
-                hostsDbBean.addHost(localHost);
-            } catch (AliasExistsException e) {
-                e.printStackTrace();
-            }
+            usersDbBean.setUsers(UserAppRequester.getAllUsers(masterAddress));
         }
+
     }
 
     @PreDestroy

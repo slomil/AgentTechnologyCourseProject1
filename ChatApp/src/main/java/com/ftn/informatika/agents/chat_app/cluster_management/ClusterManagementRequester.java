@@ -20,13 +20,11 @@ public class ClusterManagementRequester {
 
     public static List<Host> register(String destinationAddress, String address, String alias)
             throws AliasExistsException {
-        ClusterManagementEndpoint endpoint = createEndpoint(destinationAddress);
-        return endpoint.register(address, alias);
+        return createEndpoint(destinationAddress).register(address, alias);
     }
 
     public static void unregister(String destinationAddress, Host host) throws HostNotExistsException {
-        ClusterManagementEndpoint endpoint = createEndpoint(destinationAddress);
-        endpoint.unregister(host);
+        createEndpoint(destinationAddress).unregister(host);
     }
 
     private static ClusterManagementEndpoint createEndpoint(String destinationAddress) {

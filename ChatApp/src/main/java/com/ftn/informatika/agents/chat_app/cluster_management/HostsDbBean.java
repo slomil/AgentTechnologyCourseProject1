@@ -13,12 +13,12 @@ import java.util.Map;
 /**
  * @author - Srđan Milaković
  */
-//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
+@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Singleton
 public class HostsDbBean implements HostsDbLocal {
     private Map<String, Host> hosts = new HashMap<>();
 
-    //@Lock(LockType.WRITE)
+    @Lock(LockType.WRITE)
     @Override
     public void addHost(Host host) throws AliasExistsException {
         if (hosts.containsKey(host.getAddress())) {
@@ -28,7 +28,7 @@ public class HostsDbBean implements HostsDbLocal {
         hosts.put(host.getAddress(), host);
     }
 
-    //@Lock(LockType.WRITE)
+    @Lock(LockType.WRITE)
     @Override
     public void removeHost(Host host) throws HostNotExistsException {
         if (hosts.remove(host.getAddress()) == null) {
@@ -36,13 +36,13 @@ public class HostsDbBean implements HostsDbLocal {
         }
     }
 
-    //@Lock(LockType.READ)
+    @Lock(LockType.READ)
     @Override
     public boolean containsHost(Host host) {
         return hosts.containsKey(host.getAddress());
     }
 
-    //@Lock(LockType.READ)
+    @Lock(LockType.READ)
     @Override
     public List<Host> getHosts() {
         return new ArrayList<>(hosts.values());
