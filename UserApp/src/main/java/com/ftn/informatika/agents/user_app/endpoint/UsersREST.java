@@ -1,37 +1,31 @@
 package com.ftn.informatika.agents.user_app.endpoint;
 
 import com.ftn.informatika.agents.exception.*;
-import com.ftn.informatika.agents.user_app.bean.UserDbLocal;
 import com.ftn.informatika.agents.model.Host;
 import com.ftn.informatika.agents.model.User;
+import com.ftn.informatika.agents.rest_endpoints.UsersEndpoint;
+import com.ftn.informatika.agents.user_app.bean.UserDbLocal;
 
 import javax.ejb.EJB;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ejb.Stateless;
 import java.util.List;
 
 /**
  * @author - Srđan Milaković
  */
-@Path("/")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-public class RestEndpoint {
+@Stateless
+public class UsersREST implements UsersEndpoint {
 
     @EJB
     private UserDbLocal userDbBean;
 
-    @POST
-    @Path("/register")
-    public User register(@QueryParam("username") String username, @QueryParam("password") String password)
-            throws UsernameExistsException, InsufficientDataException {
+    @Override
+    public User register(String username, String password) throws UsernameExistsException, InsufficientDataException {
         return userDbBean.register(username, password);
     }
 
-    @POST
-    @Path("/login")
-    public User login(@QueryParam("username") String username, @QueryParam("password") String password,
-                  @QueryParam("hostAddress") String hostAddress, @QueryParam("hostAlias") String hostAlias)
+    @Override
+    public User login(String username, String password, String hostAddress, String hostAlias)
             throws InvalidCredentialsException, InsufficientDataException, AlreadyRegisteredException {
         if (hostAddress == null || hostAlias == null) {
             throw new InsufficientDataException();
@@ -40,8 +34,7 @@ public class RestEndpoint {
         return userDbBean.login(username, password, new Host(hostAddress, hostAlias));
     }
 
-    @POST
-    @Path("/logout")
+    @Override
     public Boolean logout(User user) {
         try {
             userDbBean.logout(user);
@@ -51,8 +44,7 @@ public class RestEndpoint {
         }
     }
 
-    @POST
-    @Path("/users")
+    @Override
     public List<User> getAllUsers() {
         return userDbBean.getAllUsers();
     }
