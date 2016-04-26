@@ -47,7 +47,6 @@ public class UsersREST implements UsersEndpoint {
 
     @Override
     public List<User> getAllUsers() {
-        //return userDbBean.getAllUsers();
-        return Arrays.asList(new User("a", "a"), new User("b", "b"));
+        return userDbBean.getAllUsers();
     }
 }

@@ -1,5 +1,10 @@
-package com.ftn.informatika.agents.chat_app.users;
+package com.ftn.informatika.agents.chat_app.users.users_app;
 
+import com.ftn.informatika.agents.chat_app.cluster_management.HostsDbLocal;
+import com.ftn.informatika.agents.chat_app.users.ActiveUsersManagementRequester;
+import com.ftn.informatika.agents.chat_app.users.UsersDbLocal;
+import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
+import com.ftn.informatika.agents.chat_app.web_client.WebsocketPacket;
 import com.ftn.informatika.agents.exception.UnsupportedMessageException;
 import com.ftn.informatika.agents.jms_messages.*;
 import com.ftn.informatika.agents.model.User;
@@ -12,6 +17,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
+import javax.websocket.Session;
 import java.io.IOException;
 import java.util.List;
 
@@ -31,6 +37,10 @@ public class UserReceiverMDBean implements MessageListener {
     private MessageObjectsDbLocal messageObjectsDbBean;
     @EJB
     private UsersDbLocal usersDbBean;
+    @EJB
+    private HostsDbLocal hostsDbBean;
+    @EJB
+    private ServerManagementLocal serverManagementBean;
 
     @Override
     public void onMessage(Message message) {
@@ -49,7 +59,11 @@ public class UserReceiverMDBean implements MessageListener {
                 List<User> users = ((GetActiveUsersMessage) object).getResponse();
                 usersDbBean.setUsers(users);
             } else if (object instanceof LoginMessage) {
+                LoginMessage msg = (LoginMessage) object;
 
+                hostsDbBean.getHosts().forEach(h -> {
+                    ActiveUsersManagementRequester.addUser(h.getAddress(), msg.getResponse());
+                });
             } else if (object instanceof RegisterMessage) {
 
             } else if (object instanceof LogoutMessage) {
@@ -62,9 +76,7 @@ public class UserReceiverMDBean implements MessageListener {
             e.printStackTrace();
         } catch (UnsupportedMessageException e) {
             System.err.println("Unsupported message.");
-        } /*catch (IOException e) {
-            System.err.println("Websocket error! " + e.getMessage());
-        }*/
+        }
 
     }
 

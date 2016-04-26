@@ -1,6 +1,11 @@
 package com.ftn.informatika.agents.chat_app.web_client;
 
+import com.ftn.informatika.agents.chat_app.users.users_app.MessageObjectsDbLocal;
+import com.ftn.informatika.agents.chat_app.users.users_app.UserAppJmsLocal;
+import com.ftn.informatika.agents.chat_app.users.users_app.UserAppRequester;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
+import com.ftn.informatika.agents.jms_messages.JmsMessage;
+import com.ftn.informatika.agents.model.User;
 import com.google.gson.Gson;
 
 import javax.ejb.EJB;
@@ -18,6 +23,10 @@ public class WebSocketEndpoint {
 
     @EJB
     private SessionsDbLocal sessionsDbBean;
+    @EJB
+    private UserAppJmsLocal userAppJmsBean;
+    @EJB
+    private MessageObjectsDbLocal messageObjectsDbBean;
     @EJB
     private ServerManagementLocal serverManagementBean;
 
@@ -71,7 +80,20 @@ public class WebSocketEndpoint {
     public void onError(Throwable error) {
     }
 
-    private void handleLoginMessage(String payload, Session session) {
+    private void handleLoginMessage(String payload, Session session) throws IOException {
+        User user = new Gson().fromJson(payload, User.class);
+        try {
+            if (serverManagementBean.isMaster()) {
+                JmsMessage jmsMessage = userAppJmsBean.login(user.getUsername(), user.getPassword(), serverManagementBean.getHost());
+                messageObjectsDbBean.addMessage(jmsMessage.getUuid(), session);
+            } else {
+                UserAppRequester.login(serverManagementBean.getMasterAddress(), user.getUsername(), user.getPassword(), serverManagementBean.getHost());
+                session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.REMOVED_USER, null, true)));
+                // TODO: Add notifier
+            }
+        } catch (Exception e) {
+            session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.REMOVED_USER, e.getClass().getSimpleName(), false)));
+        }
 
     }
 

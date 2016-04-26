@@ -4,6 +4,7 @@ import com.ftn.informatika.agents.exception.*;
 import com.ftn.informatika.agents.model.Host;
 import com.ftn.informatika.agents.model.User;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.*;
 import java.util.*;
 
@@ -16,6 +17,11 @@ public class UserDbBean implements UserDbLocal {
 
     private Map<String, User> users = new HashMap<>();
     private Map<String, User> activeUsers = new HashMap<>();
+
+    @PostConstruct
+    public void init() {
+        users.put("admin", new User("admin", "admin"));
+    }
 
     @Override
     @Lock(LockType.WRITE)

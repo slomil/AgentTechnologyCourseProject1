@@ -60,7 +60,8 @@ public class MDBeanEndpoint extends ObjectMessageSender implements MessageListen
                     }
                 } catch (InvalidCredentialsException | InsufficientDataException | AlreadyRegisteredException
                         | UsernameExistsException | UserInactiveException | UnsupportedMessageException e) {
-                    System.err.println("Unsupported message exception: " + object.getClass().getSimpleName());
+                    // TODO: send error message
+                    System.err.println("Exception: " + e.getClass().getSimpleName());
                 }
             } catch (JMSException e) {
                 e.printStackTrace();

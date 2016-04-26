@@ -11,7 +11,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
  * @author - Srđan Milaković
  */
 public class ActiveUsersManagementRequester {
-    private static final String ACTIVE_USERS_MANAGEMENT_URL = "http://%s/users_management/api/";
+    private static final String ACTIVE_USERS_MANAGEMENT_URL = "http://%s/chat_app/api/";
 
     public static void addUser(String destinationAddress, User user) {
         createEndpoint(destinationAddress).addUser(user);
