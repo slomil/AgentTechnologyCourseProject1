@@ -1,5 +1,9 @@
 # AgentsCourseProject
 
+## System Architecture
+
+![servers_diagram](https://cloud.githubusercontent.com/assets/9393829/14836814/4f88643a-0c13-11e6-81f3-5ac383dee9a2.png)
+
 ## Configuration
 Start JBoss with standalone-agents.xml
 <br />
