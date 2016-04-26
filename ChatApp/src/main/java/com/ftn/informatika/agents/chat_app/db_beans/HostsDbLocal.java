@@ -1,4 +1,4 @@
-package com.ftn.informatika.agents.chat_app.cluster_management;
+package com.ftn.informatika.agents.chat_app.db_beans;
 
 import com.ftn.informatika.agents.exception.AliasExistsException;
 import com.ftn.informatika.agents.exception.HostNotExistsException;

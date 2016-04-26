@@ -1,11 +1,12 @@
 package com.ftn.informatika.agents.chat_app.web_client;
 
-import com.ftn.informatika.agents.chat_app.cluster_management.HostsDbLocal;
-import com.ftn.informatika.agents.chat_app.users.ActiveUsersManagementRequester;
-import com.ftn.informatika.agents.chat_app.users.ActiveUsersDbLocal;
-import com.ftn.informatika.agents.chat_app.users.users_app.MessageObjectsDbLocal;
-import com.ftn.informatika.agents.chat_app.users.users_app.UserAppJmsLocal;
-import com.ftn.informatika.agents.chat_app.users.users_app.UserAppRequester;
+import com.ftn.informatika.agents.chat_app.db_beans.HostsDbLocal;
+import com.ftn.informatika.agents.chat_app.db_beans.SessionsDbLocal;
+import com.ftn.informatika.agents.chat_app.requestors.ActiveUsersManagementRequester;
+import com.ftn.informatika.agents.chat_app.db_beans.ActiveUsersDbLocal;
+import com.ftn.informatika.agents.chat_app.db_beans.MessageObjectsDbLocal;
+import com.ftn.informatika.agents.chat_app.jms_user_queue.UserAppJmsLocal;
+import com.ftn.informatika.agents.chat_app.requestors.UserAppRequester;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
 import com.ftn.informatika.agents.jms_messages.JmsMessage;
 import com.ftn.informatika.agents.model.User;
@@ -16,7 +17,6 @@ import javax.ejb.Singleton;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -8,7 +8,7 @@ import javax.ws.rs.core.Application;
  */
 @ApplicationPath("/api")
 public class ApplicationConfig extends Application {
-    public static final String baseUrl = "http://localhost:8080";
+    public static final String CHAT_APP_URL = "http://%s/chat_app/api/";
 }
 
 

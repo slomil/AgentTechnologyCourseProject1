@@ -1,5 +1,6 @@
-package com.ftn.informatika.agents.chat_app.cluster_management;
+package com.ftn.informatika.agents.chat_app.requestors;
 
+import com.ftn.informatika.agents.chat_app.util.ApplicationConfig;
 import com.ftn.informatika.agents.exception.AliasExistsException;
 import com.ftn.informatika.agents.exception.HostNotExistsException;
 import com.ftn.informatika.agents.model.Host;
@@ -16,7 +17,6 @@ import java.util.List;
  */
 @Stateless
 public class ClusterManagementRequester {
-    private static final String CHAT_APP_URL = "http://%s/chat_app/api/";
 
     public static List<Host> register(String destinationAddress, String address, String alias)
             throws AliasExistsException {
@@ -28,7 +28,7 @@ public class ClusterManagementRequester {
     }
 
     private static ClusterManagementEndpoint createEndpoint(String destinationAddress) {
-        String url = String.format(CHAT_APP_URL, destinationAddress);
+        String url = String.format(ApplicationConfig.CHAT_APP_URL, destinationAddress);
         ResteasyClient client = new ResteasyClientBuilder().build();
         ResteasyWebTarget target = client.target(url);
         return target.proxy(ClusterManagementEndpoint.class);

@@ -1,4 +1,4 @@
-package com.ftn.informatika.agents.chat_app.web_client;
+package com.ftn.informatika.agents.chat_app.db_beans;
 
 import javax.ejb.*;
 import javax.websocket.Session;

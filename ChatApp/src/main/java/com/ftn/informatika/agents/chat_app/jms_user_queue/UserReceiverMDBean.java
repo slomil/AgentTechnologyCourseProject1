@@ -1,8 +1,9 @@
-package com.ftn.informatika.agents.chat_app.users.users_app;
+package com.ftn.informatika.agents.chat_app.jms_user_queue;
 
-import com.ftn.informatika.agents.chat_app.cluster_management.HostsDbLocal;
-import com.ftn.informatika.agents.chat_app.users.ActiveUsersManagementRequester;
-import com.ftn.informatika.agents.chat_app.users.ActiveUsersDbLocal;
+import com.ftn.informatika.agents.chat_app.db_beans.HostsDbLocal;
+import com.ftn.informatika.agents.chat_app.db_beans.MessageObjectsDbLocal;
+import com.ftn.informatika.agents.chat_app.requestors.ActiveUsersManagementRequester;
+import com.ftn.informatika.agents.chat_app.db_beans.ActiveUsersDbLocal;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
 import com.ftn.informatika.agents.chat_app.web_client.WebsocketPacket;
 import com.ftn.informatika.agents.exception.UnsupportedMessageException;

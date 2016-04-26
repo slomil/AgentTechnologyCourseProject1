@@ -1,5 +1,6 @@
-package com.ftn.informatika.agents.chat_app.cluster_management;
+package com.ftn.informatika.agents.chat_app.rest;
 
+import com.ftn.informatika.agents.chat_app.cluster_management.ClusterManagementLocal;
 import com.ftn.informatika.agents.exception.AliasExistsException;
 import com.ftn.informatika.agents.exception.HostNotExistsException;
 import com.ftn.informatika.agents.model.Host;

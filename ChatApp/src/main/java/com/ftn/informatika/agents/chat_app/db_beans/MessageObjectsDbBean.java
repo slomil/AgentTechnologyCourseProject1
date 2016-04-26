@@ -1,4 +1,4 @@
-package com.ftn.informatika.agents.chat_app.users.users_app;
+package com.ftn.informatika.agents.chat_app.db_beans;
 
 import javax.ejb.*;
 import java.util.HashMap;

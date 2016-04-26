@@ -1,6 +1,7 @@
-package com.ftn.informatika.agents.chat_app.users;
+package com.ftn.informatika.agents.chat_app.rest;
 
-import com.ftn.informatika.agents.chat_app.web_client.SessionsDbLocal;
+import com.ftn.informatika.agents.chat_app.db_beans.ActiveUsersDbLocal;
+import com.ftn.informatika.agents.chat_app.db_beans.SessionsDbLocal;
 import com.ftn.informatika.agents.chat_app.web_client.WebsocketPacket;
 import com.ftn.informatika.agents.model.User;
 import com.ftn.informatika.agents.rest_endpoints.ActiveUsersManagementEndpoint;
