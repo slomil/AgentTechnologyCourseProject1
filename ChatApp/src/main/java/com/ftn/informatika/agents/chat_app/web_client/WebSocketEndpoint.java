@@ -1,7 +1,7 @@
 package com.ftn.informatika.agents.chat_app.web_client;
 
 import com.ftn.informatika.agents.chat_app.db_beans.HostsDbLocal;
-import com.ftn.informatika.agents.chat_app.db_beans.SessionsDbLocal;
+import com.ftn.informatika.agents.chat_app.db_beans.UserSessionDbLocal;
 import com.ftn.informatika.agents.chat_app.requestors.ActiveUsersManagementRequester;
 import com.ftn.informatika.agents.chat_app.db_beans.ActiveUsersDbLocal;
 import com.ftn.informatika.agents.chat_app.db_beans.MessageObjectsDbLocal;
@@ -27,7 +27,7 @@ import java.util.List;
 public class WebSocketEndpoint {
 
     @EJB
-    private SessionsDbLocal sessionsDbBean;
+    private UserSessionDbLocal sessionsDbBean;
     @EJB
     private UserAppJmsLocal userAppJmsBean;
     @EJB
@@ -73,15 +73,11 @@ public class WebSocketEndpoint {
 
     @OnOpen
     public void onOpen(Session session) {
-        if (!sessionsDbBean.containsSession(session)) {
-            sessionsDbBean.addSession(session);
-            System.out.println("Added session with ID " + session.getId());
-        }
+        System.out.println("New session with ID " + session.getId());
     }
 
     @OnClose
     public void onClose(Session session) {
-        sessionsDbBean.removeSession(session);
         System.out.println("Removed session with ID " + session.getId());
     }
 
