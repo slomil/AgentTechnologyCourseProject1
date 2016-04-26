@@ -6,6 +6,7 @@ import com.google.gson.Gson;
  * @author - Srđan Milaković
  */
 public class WebsocketPacket {
+    public static final String ERROR = "error";
     public static final String LOGIN = "login";
     public static final String REGISTER = "register";
     public static final String LOGOUT = "logout";

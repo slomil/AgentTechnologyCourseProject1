@@ -9,10 +9,10 @@ appLoginCtrlModule.controller('LoginCtrl', function ($rootScope, $scope, $locati
     $scope.alertMessage = null;
 
     $scope.successfulLogin = function (data) {
-        $rootScope.userId = data.userId;
-        $rootScope.accessToken = data.accessToken;
+        $rootScope.userId = data.username;
         $scope.alertMessage = null;
         $location.path('/');
+        $scope.$apply();
     };
 
     $scope.login = function () {
@@ -33,8 +33,7 @@ appLoginCtrlModule.controller('LoginCtrl', function ($rootScope, $scope, $locati
                 $scope.successfulLogin(response.data);
             },
             function (response) {
-                var message = (response.data && response.data.message) ? response.data.message : "";
-                $scope.alertMessage = "Status code: " + response.status + " " + message;
+                $scope.alertMessage = "Error: " + response.message;
             }
         );
     };

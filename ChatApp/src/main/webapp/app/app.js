@@ -1,7 +1,7 @@
 /*global angular*/
 var app = angular.module('app', ['app.controllers', 'app.services', 'ngRoute', 'ui.bootstrap']);
 
-app.config(function ($routeProvider, $locationProvider, $httpProvider) {
+app.config(function ($routeProvider) {
     "use strict";
     $routeProvider
         .when('/', {
@@ -25,10 +25,4 @@ app.config(function ($routeProvider, $locationProvider, $httpProvider) {
             controller: 'LogoutCtrl'
         })
         .otherwise('/');
-    $locationProvider.html5Mode(true);
-});
-
-app.run(function ($rootScope) {
-    "use strict";
-    $rootScope.display = 'login';
 });

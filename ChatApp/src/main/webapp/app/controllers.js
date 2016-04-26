@@ -2,5 +2,6 @@
 angular.module('app.controllers', [
 	'app.MainCtrl',
 	'app.LoginCtrl',
-    'app.RegisterCtrl'
+    'app.RegisterCtrl',
+	'app.MessagesCtrl'
 ]);

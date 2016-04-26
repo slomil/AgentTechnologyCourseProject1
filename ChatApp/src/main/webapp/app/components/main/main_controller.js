@@ -19,9 +19,8 @@ appMainCtrlModule.controller('MainCtrl', function ($rootScope, $scope, $location
             }
         };
 
-
-    if ($rootScope.userId && $rootScope.accessToken) {
-        Login.isLogged($rootScope.userId, $rootScope.accessToken, redirectToHome, redirectToLogin);
+    if ($rootScope.userId) {
+        redirectToHome();
     } else {
         redirectToLogin();
     }

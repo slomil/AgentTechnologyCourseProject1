@@ -50,6 +50,7 @@ public class MDBeanEndpoint extends ObjectMessageSender implements MessageListen
                     } else if (object instanceof LogoutMessage) {
                         LogoutMessage msg = (LogoutMessage) object;
                         userDbBean.logout(msg.getUser());
+                        msg.setResponse(msg.getUser());
                         sendObject(msg);
                     } else if (object instanceof GetActiveUsersMessage) {
                         GetActiveUsersMessage msg = (GetActiveUsersMessage) object;

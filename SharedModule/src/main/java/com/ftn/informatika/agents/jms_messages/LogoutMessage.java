@@ -7,6 +7,7 @@ import com.ftn.informatika.agents.model.User;
  */
 public class LogoutMessage extends JmsMessage {
     private User user;
+    private User response;
 
     public LogoutMessage() {
     }
@@ -21,5 +22,13 @@ public class LogoutMessage extends JmsMessage {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public User getResponse() {
+        return response;
+    }
+
+    public void setResponse(User response) {
+        this.response = response;
     }
 }

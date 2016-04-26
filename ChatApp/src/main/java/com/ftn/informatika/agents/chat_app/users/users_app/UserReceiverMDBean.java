@@ -60,14 +60,20 @@ public class UserReceiverMDBean implements MessageListener {
                 usersDbBean.setUsers(users);
             } else if (object instanceof LoginMessage) {
                 LoginMessage msg = (LoginMessage) object;
+                hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.addUser(h.getAddress(), msg.getResponse()));
 
-                hostsDbBean.getHosts().forEach(h -> {
-                    ActiveUsersManagementRequester.addUser(h.getAddress(), msg.getResponse());
-                });
+                WebsocketPacket packet = new WebsocketPacket(WebsocketPacket.LOGIN, msg.getResponse(), true);
+                ((Session) messageObject).getBasicRemote().sendText(toJson(packet));
             } else if (object instanceof RegisterMessage) {
-
+                RegisterMessage msg = (RegisterMessage) object;
+                WebsocketPacket packet = new WebsocketPacket(WebsocketPacket.REGISTER, msg.getResponse(), true);
+                ((Session) messageObject).getBasicRemote().sendText(toJson(packet));
             } else if (object instanceof LogoutMessage) {
+                LogoutMessage msg = (LogoutMessage) object;
+                hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.removeUser(h.getAddress(), msg.getResponse()));
 
+                WebsocketPacket packet = new WebsocketPacket(WebsocketPacket.LOGOUT, msg.getResponse(), true);
+                ((Session) messageObject).getBasicRemote().sendText(toJson(packet));
             } else {
                 throw new UnsupportedMessageException();
             }
@@ -76,6 +82,8 @@ public class UserReceiverMDBean implements MessageListener {
             e.printStackTrace();
         } catch (UnsupportedMessageException e) {
             System.err.println("Unsupported message.");
+        } catch (IOException e) {
+            System.err.println("Socket exception, message: " + e.getMessage());
         }
 
     }

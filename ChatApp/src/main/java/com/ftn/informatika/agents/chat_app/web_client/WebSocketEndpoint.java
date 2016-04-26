@@ -1,5 +1,8 @@
 package com.ftn.informatika.agents.chat_app.web_client;
 
+import com.ftn.informatika.agents.chat_app.cluster_management.HostsDbLocal;
+import com.ftn.informatika.agents.chat_app.users.ActiveUsersManagementRequester;
+import com.ftn.informatika.agents.chat_app.users.UsersDbLocal;
 import com.ftn.informatika.agents.chat_app.users.users_app.MessageObjectsDbLocal;
 import com.ftn.informatika.agents.chat_app.users.users_app.UserAppJmsLocal;
 import com.ftn.informatika.agents.chat_app.users.users_app.UserAppRequester;
@@ -26,6 +29,10 @@ public class WebSocketEndpoint {
     @EJB
     private UserAppJmsLocal userAppJmsBean;
     @EJB
+    private HostsDbLocal hostsDbBean;
+    @EJB
+    private UsersDbLocal usersDbBean;
+    @EJB
     private MessageObjectsDbLocal messageObjectsDbBean;
     @EJB
     private ServerManagementLocal serverManagementBean;
@@ -38,27 +45,27 @@ public class WebSocketEndpoint {
 
         try {
             System.out.println("WebSocketEndpoint receiver message:" + message);
-
+            new WebsocketPacket();
             WebsocketPacket websocketPacket = new Gson().fromJson(message, WebsocketPacket.class);
             switch (websocketPacket.getType()) {
                 case WebsocketPacket.LOGIN:
-                    handleLoginMessage(websocketPacket.getPayload(), session);
+                    handleLoginPayload(websocketPacket.getPayload(), session);
                     break;
                 case WebsocketPacket.REGISTER:
-                    handleLoginMessage(websocketPacket.getPayload(), session);
+                    handleRegisterPayload(websocketPacket.getPayload(), session);
                     break;
                 case WebsocketPacket.LOGOUT:
-                    handleLoginMessage(websocketPacket.getPayload(), session);
+                    handleLogoutPayload(websocketPacket.getPayload(), session);
                     break;
                 case WebsocketPacket.MESSAGE:
-                    handleLoginMessage(websocketPacket.getPayload(), session);
+                    handleMessagePayload(websocketPacket.getPayload(), session);
                     break;
                 case WebsocketPacket.USERS:
-                    handleLoginMessage(websocketPacket.getPayload(), session);
+                    handleUsersPayload(websocketPacket.getPayload(), session);
                     break;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("WebSocket Exception: " + e.getMessage());
         }
     }
 
@@ -78,9 +85,10 @@ public class WebSocketEndpoint {
 
     @OnError
     public void onError(Throwable error) {
+        System.err.println("onError: " + error.getMessage());
     }
 
-    private void handleLoginMessage(String payload, Session session) throws IOException {
+    private void handleLoginPayload(String payload, Session session) throws IOException {
         User user = new Gson().fromJson(payload, User.class);
         try {
             if (serverManagementBean.isMaster()) {
@@ -88,28 +96,50 @@ public class WebSocketEndpoint {
                 messageObjectsDbBean.addMessage(jmsMessage.getUuid(), session);
             } else {
                 UserAppRequester.login(serverManagementBean.getMasterAddress(), user.getUsername(), user.getPassword(), serverManagementBean.getHost());
-                session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.REMOVED_USER, null, true)));
-                // TODO: Add notifier
+                session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.LOGIN, null, true)));
+                hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.addUser(h.getAddress(), user));
             }
         } catch (Exception e) {
-            session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.REMOVED_USER, e.getClass().getSimpleName(), false)));
+            session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.ERROR, e.getClass().getSimpleName(), false)));
         }
+    }
+
+    private void handleRegisterPayload(String payload, Session session) throws IOException {
+        User user = new Gson().fromJson(payload, User.class);
+        try {
+            if (serverManagementBean.isMaster()) {
+                JmsMessage jmsMessage = userAppJmsBean.register(user.getUsername(), user.getPassword());
+                messageObjectsDbBean.addMessage(jmsMessage.getUuid(), session);
+            } else {
+                UserAppRequester.register(serverManagementBean.getMasterAddress(), user.getUsername(), user.getPassword());
+                session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.REGISTER, null, true)));
+            }
+        } catch (Exception e) {
+            session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.ERROR, e.getClass().getSimpleName(), false)));
+        }
+    }
+
+    private void handleLogoutPayload(String payload, Session session) throws IOException {
+        User user = new Gson().fromJson(payload, User.class);
+        try {
+            if (serverManagementBean.isMaster()) {
+                JmsMessage jmsMessage = userAppJmsBean.logout(user);
+                messageObjectsDbBean.addMessage(jmsMessage.getUuid(), session);
+            } else {
+                UserAppRequester.logout(serverManagementBean.getMasterAddress(), user);
+                session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.LOGOUT, null, true)));
+                hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.removeUser(h.getAddress(), user));
+            }
+        } catch (Exception e) {
+            session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.ERROR, e.getClass().getSimpleName(), false)));
+        }
+    }
+
+    private void handleMessagePayload(String payload, Session session) {
 
     }
 
-    private void handleRegisterMessage(String payload, Session session) {
-
-    }
-
-    private void handleLogoutMessage(String payload, Session session) {
-
-    }
-
-    private void handleMessageMessage(String payload, Session session) {
-
-    }
-
-    private void handleUsersMessage(String payload, Session session) {
+    private void handleUsersPayload(String payload, Session session) {
 
     }
 }

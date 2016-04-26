@@ -1,12 +1,12 @@
 /*global angular*/
-var appLoginModule = angular.module('app.Login', []);
+var appRegisterModule = angular.module('app.Register', []);
 
-appLoginModule.factory('Login', function (WebSocket) {
+appRegisterModule.factory('Register', function (WebSocket) {
     "use strict";
 
     return {
-        login: function (username, password, onSuccess, onError) {
-            WebSocket.addOnMessageListener('login', function (data) {
+        register: function (username, password, onSuccess, onError) {
+            WebSocket.addOnMessageListener('register', function (data) {
                 var object = JSON.parse(data);
                 if (object.success) {
                     object.data = JSON.parse(object.payload);
@@ -19,7 +19,7 @@ appLoginModule.factory('Login', function (WebSocket) {
             WebSocket.send({
                 username: username,
                 password: password
-            }, 'login')
+            }, 'register')
         }
     };
 

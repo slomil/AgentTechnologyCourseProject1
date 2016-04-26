@@ -1,27 +1,19 @@
 /*global angular*/
 var appWebSocketModule = angular.module('app.WebSocket', []);
 
-appWebSocketModule.factory('WebSocket', function () {
+appWebSocketModule.factory('WebSocket', function ($location) {
     "use strict";
 
-    // TODO: Remove ID listeners
     var socket = null,
-        idCounter = 0,
-        onMessageListeners = [],
-        onMessageIdListeners = {},
+        onMessageListeners = {},
         openSocket = function () {
-            socket = new WebSocket('ws://localhost:8080/chat_app/data');
+            socket = new WebSocket('ws://localhost:' + $location.port() + '/chat_app/data');
             socket.onmessage = function (event) {
+                var object = JSON.parse(event.data),
+                    listener = onMessageListeners[object.type];
 
-                if (event.data.id && onMessageIdListeners.hasOwnProperty(event.data.id)) {
-                    onMessageIdListeners[event.data.id](event.data);
-                    delete onMessageIdListeners[event.data.id];
-                }
-
-                for (var listener in onMessageListeners) {
-                    if (onMessageListeners.hasOwnProperty(listener)) {
-                        onMessageListeners[listener](event.data);
-                    }
+                if (listener) {
+                    listener(event.data);
                 }
             };
         };
@@ -47,12 +39,8 @@ appWebSocketModule.factory('WebSocket', function () {
 
             socket.send(JSON.stringify(data));
         },
-        addOnMessageListener: function (listener, createId) {
-            if (createId) {
-                onMessageIdListeners[idCounter++] = listener;
-            } else {
-                onMessageListeners.push(listener);
-            }
+        addOnMessageListener: function (type, listener) {
+            onMessageListeners[type] = listener;
         }
     };
 

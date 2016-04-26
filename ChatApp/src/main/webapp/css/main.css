@@ -9,6 +9,53 @@ body {
     min-height: 100%;
 }
 
+#Main {
+    height: 600px;
+    background-color: #2B2B2B;
+}
+
+#Users {
+    height: 570px;
+    margin: 15px 0;
+    background-color: #3C3F41;
+    border: solid #515658 3px;
+    overflow: auto;
+}
+
+#Users .user {
+    color: #4178A7;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+#Messages {
+    height: 490px;
+    margin: 15px 0;
+    background-color: #3C3F41;
+    border: solid #515658 3px;
+    overflow: auto;
+}
+
+#Messages .user {
+    color: #E8BF6A;
+    font-weight: bold;
+}
+
+#Messages .date {
+    color: #6CAA4F;
+}
+
+#Messages .content {
+    color: #A9B7C6;
+}
+
+#NewMessage {
+    height: 65px;
+    margin: 15px 0;
+    background-color: #3C3F41;
+    border: solid #515658 3px;
+}
+
 #SignUp, #Login {
     width: 500px;
     margin: 50px auto 75px auto;
@@ -17,7 +64,7 @@ body {
     box-shadow: 0 0 10px 5px #AFAFAF;
 }
 
-#SignUpButton {
+#SignUpButton, #BackButton {
     width: 370px;
 }
 
@@ -95,7 +142,15 @@ body {
 }
 
 .p-0 {
-    padding: 0px;
+    padding: 0;
+}
+
+.p-10 {
+    padding: 10px;
+}
+
+.p-20 {
+    padding: 20px;
 }
 
 .plr-50 {

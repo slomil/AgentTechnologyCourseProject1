@@ -21,6 +21,10 @@ public class UserDbBean implements UserDbLocal {
     @PostConstruct
     public void init() {
         users.put("admin", new User("admin", "admin"));
+        for (char c = 'A'; c <= 'Z'; c++) {
+            User user = new User("user" + c, "user");
+            users.put(user.getUsername(), user);
+        }
     }
 
     @Override
