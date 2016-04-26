@@ -11,9 +11,9 @@ import java.util.Map;
 /**
  * @author - Srđan Milaković
  */
-@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
+//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Singleton
-public class UsersDbBean implements UsersDbLocal {
+public class ActiveUsersDbBean implements ActiveUsersDbLocal {
 
     private Map<String, User> users = new HashMap<>();
 

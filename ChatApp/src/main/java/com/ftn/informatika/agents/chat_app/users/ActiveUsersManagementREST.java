@@ -16,7 +16,7 @@ import javax.ejb.Stateless;
 public class ActiveUsersManagementREST implements ActiveUsersManagementEndpoint {
 
     @EJB
-    private UsersDbLocal usersDbBean;
+    private ActiveUsersDbLocal usersDbBean;
     @EJB
     private SessionsDbLocal sessionsDbBean;
 

@@ -1,7 +1,7 @@
 /*global angular*/
 var appWebSocketModule = angular.module('app.WebSocket', []);
 
-appWebSocketModule.factory('WebSocket', function ($location) {
+appWebSocketModule.factory('WebSocket', function ($location, $interval) {
     "use strict";
 
     var socket = null,
@@ -37,7 +37,16 @@ appWebSocketModule.factory('WebSocket', function ($location) {
                 data = payload;
             }
 
-            socket.send(JSON.stringify(data));
+            if (socket.readyState != -1) {
+                socket.send(JSON.stringify(data));
+            } else {
+                var intervalId = $interval(function () {
+                    if (socket.readyState != -1) {
+                        socket.send(JSON.stringify(data));
+                        $interval.clear(intervalId);
+                    }
+                }, 1000);
+            }
         },
         addOnMessageListener: function (type, listener) {
             onMessageListeners[type] = listener;

@@ -8,6 +8,10 @@ appLoginCtrlModule.controller('LoginCtrl', function ($rootScope, $scope, $locati
     $scope.password = "";
     $scope.alertMessage = null;
 
+    if ($rootScope.userId) {
+        $location.path("/messages");
+    }
+
     $scope.successfulLogin = function (data) {
         $rootScope.userId = data.username;
         $scope.alertMessage = null;

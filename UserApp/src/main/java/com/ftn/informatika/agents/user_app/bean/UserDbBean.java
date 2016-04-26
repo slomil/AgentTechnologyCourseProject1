@@ -6,7 +6,10 @@ import com.ftn.informatika.agents.model.User;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author - Srđan Milaković
@@ -60,7 +63,9 @@ public class UserDbBean implements UserDbLocal {
             throw new AlreadyRegisteredException();
         }
 
-        activeUsers.put(user.getUsername(), new User(username, password, host));
+        user.setHost(host);
+        activeUsers.put(user.getUsername(), user);
+
         return user;
     }
 
@@ -75,9 +80,7 @@ public class UserDbBean implements UserDbLocal {
     @Override
     @Lock(LockType.READ)
     public List<User> getAllUsers() {
-        List<User> returnUsers = new ArrayList<>();
-        activeUsers.values().forEach(u -> returnUsers.add(new User(u.getUsername(), null, u.getHost())));
-        return returnUsers;
+        return new ArrayList<>(activeUsers.values());
     }
 
 }

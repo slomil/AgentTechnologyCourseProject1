@@ -8,6 +8,10 @@ appRegisterCtrlModule.controller('RegisterCtrl', function ($rootScope, $scope, $
     $scope.renteredPassword = "";
     $scope.alertMessage = null;
 
+    if ($rootScope.userId) {
+        $location.path("/messages");
+    }
+
     $scope.successfulRegistration = function (data) {
         $rootScope.userId = data.username;
         $scope.alertMessage = null;

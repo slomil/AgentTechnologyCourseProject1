@@ -2,7 +2,7 @@ package com.ftn.informatika.agents.chat_app.users.users_app;
 
 import com.ftn.informatika.agents.chat_app.cluster_management.HostsDbLocal;
 import com.ftn.informatika.agents.chat_app.users.ActiveUsersManagementRequester;
-import com.ftn.informatika.agents.chat_app.users.UsersDbLocal;
+import com.ftn.informatika.agents.chat_app.users.ActiveUsersDbLocal;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
 import com.ftn.informatika.agents.chat_app.web_client.WebsocketPacket;
 import com.ftn.informatika.agents.exception.UnsupportedMessageException;
@@ -36,7 +36,7 @@ public class UserReceiverMDBean implements MessageListener {
     @EJB
     private MessageObjectsDbLocal messageObjectsDbBean;
     @EJB
-    private UsersDbLocal usersDbBean;
+    private ActiveUsersDbLocal usersDbBean;
     @EJB
     private HostsDbLocal hostsDbBean;
     @EJB

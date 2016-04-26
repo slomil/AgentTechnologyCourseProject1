@@ -2,7 +2,7 @@ package com.ftn.informatika.agents.chat_app.web_client;
 
 import com.ftn.informatika.agents.chat_app.cluster_management.HostsDbLocal;
 import com.ftn.informatika.agents.chat_app.users.ActiveUsersManagementRequester;
-import com.ftn.informatika.agents.chat_app.users.UsersDbLocal;
+import com.ftn.informatika.agents.chat_app.users.ActiveUsersDbLocal;
 import com.ftn.informatika.agents.chat_app.users.users_app.MessageObjectsDbLocal;
 import com.ftn.informatika.agents.chat_app.users.users_app.UserAppJmsLocal;
 import com.ftn.informatika.agents.chat_app.users.users_app.UserAppRequester;
@@ -16,6 +16,8 @@ import javax.ejb.Singleton;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author - Srđan Milaković
@@ -31,7 +33,7 @@ public class WebSocketEndpoint {
     @EJB
     private HostsDbLocal hostsDbBean;
     @EJB
-    private UsersDbLocal usersDbBean;
+    private ActiveUsersDbLocal activeUsersDbBean;
     @EJB
     private MessageObjectsDbLocal messageObjectsDbBean;
     @EJB
@@ -95,8 +97,9 @@ public class WebSocketEndpoint {
                 JmsMessage jmsMessage = userAppJmsBean.login(user.getUsername(), user.getPassword(), serverManagementBean.getHost());
                 messageObjectsDbBean.addMessage(jmsMessage.getUuid(), session);
             } else {
+                user.setHost(serverManagementBean.getHost());
                 UserAppRequester.login(serverManagementBean.getMasterAddress(), user.getUsername(), user.getPassword(), serverManagementBean.getHost());
-                session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.LOGIN, null, true)));
+                session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.LOGIN, user, true)));
                 hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.addUser(h.getAddress(), user));
             }
         } catch (Exception e) {
@@ -139,7 +142,8 @@ public class WebSocketEndpoint {
 
     }
 
-    private void handleUsersPayload(String payload, Session session) {
-
+    private void handleUsersPayload(String payload, Session session) throws IOException {
+        List<User> users = activeUsersDbBean.getUsers();
+        session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.USERS, users, true)));
     }
 }

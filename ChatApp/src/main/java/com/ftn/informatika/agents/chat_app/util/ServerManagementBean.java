@@ -4,7 +4,7 @@ import com.ftn.informatika.agents.chat_app.cluster_management.ClusterManagementR
 import com.ftn.informatika.agents.chat_app.cluster_management.HostsDbLocal;
 import com.ftn.informatika.agents.chat_app.users.users_app.UserAppJmsLocal;
 import com.ftn.informatika.agents.chat_app.users.users_app.UserAppRequester;
-import com.ftn.informatika.agents.chat_app.users.UsersDbLocal;
+import com.ftn.informatika.agents.chat_app.users.ActiveUsersDbLocal;
 import com.ftn.informatika.agents.exception.AliasExistsException;
 import com.ftn.informatika.agents.exception.HostNotExistsException;
 import com.ftn.informatika.agents.model.Host;
@@ -32,7 +32,7 @@ public class ServerManagementBean implements ServerManagementLocal {
     @EJB
     private HostsDbLocal hostsDbBean;
     @EJB
-    private UsersDbLocal usersDbBean;
+    private ActiveUsersDbLocal usersDbBean;
     @EJB
     private UserAppJmsLocal userAppJmsBean;
 
@@ -80,7 +80,6 @@ public class ServerManagementBean implements ServerManagementLocal {
         localHost = new Host(localAddress, hostName);
 
         // Register to master node
-
         try {
             if (!isMaster()) {
                 ClusterManagementRequester.register(masterAddress, localAddress, hostName).forEach(h -> {

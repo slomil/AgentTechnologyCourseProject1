@@ -9,7 +9,7 @@ import java.util.List;
  * @author - Srđan Milaković
  */
 @Local
-public interface UsersDbLocal {
+public interface ActiveUsersDbLocal {
     void setUsers(List<User> users);
     void addUser(User user);
     void removeUser(User user);

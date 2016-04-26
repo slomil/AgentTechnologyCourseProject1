@@ -57,10 +57,10 @@
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.14" />
           <element id="library" level="project" name="Maven: javassist:javassist:3.12.1.GA" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.38" />
-          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.6.1" />
           <element id="archive" name="SharedModule-1.0-SNAPSHOT.jar">
             <element id="module-output" name="SharedModule" />
           </element>
+          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.6.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

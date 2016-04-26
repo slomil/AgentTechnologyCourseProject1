@@ -9,8 +9,8 @@
     <div id="Main" class="row">
         <div class="col-md-4">
             <div id="Users" class="p-20">
-                <div ng-repeat="user in users">
-                    <span class="user">{{user.username}}</span>
+                <div ng-repeat="(user, selected) in users">
+                    <span class="user">{{user}}</span>
                 </div>
             </div>
         </div>

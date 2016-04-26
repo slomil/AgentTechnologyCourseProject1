@@ -1,30 +1,47 @@
 /*global angular*/
 var appMessagesCtrlModule = angular.module('app.MessagesCtrl', []);
 
-appMessagesCtrlModule.controller('MessagesCtrl', function ($scope) {
+appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $location, Messages) {
     "use strict";
 
     $scope.selectedUser = null;
     $scope.newMessage = "";
-    $scope.users = [];
+    $scope.users = {};
     $scope.messages = [];
 
-    for (var i = 1; i < 100; i++) {
-        $scope.users.push({
-            username: 'user' + i
+    if (!$rootScope.userId) {
+        $location.path("/login");
+    }
+
+    $scope.init = function () {
+        Messages.getActiveUsers(function (response) {
+            // Transform list to dictionary
+            var userIdx, user;
+            $scope.users = {};
+            for (userIdx in response.data) {
+                if (response.data.hasOwnProperty(userIdx)) {
+                    user = response.data[userIdx];
+                    $scope.users[user.username] = false;
+                }
+            }
+            $scope.$apply();
         });
-        $scope.messages.push({
-            user: {
-                username: 'user' + i
-            },
-            date: new Date(),
-            subject: "Subject",
-            content: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+
+        Messages.addOnNewUserListener(function (response) {
+            $scope.users[response.data.username] = false;
+            $scope.$apply();
+        });
+
+        Messages.addOnRemovedUserListener(function (response) {
+            delete $scope.users[response.data.username];
+            $scope.$apply();
         })
-    }
+    };
 
-    $scope.send = function() {
+    $scope.send = function () {
 
-    }
+    };
+
+    $scope.init();
 
 });
