@@ -13,5 +13,7 @@ public interface ActiveUsersDbLocal {
     void setUsers(List<User> users);
     void addUser(User user);
     void removeUser(User user);
+    User getUser(User to);
     List<User> getUsers();
+
 }

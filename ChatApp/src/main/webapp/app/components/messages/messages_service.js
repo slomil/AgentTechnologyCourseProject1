@@ -22,18 +22,7 @@ appMessagesModule.factory('Messages', function (WebSocket) {
 
             WebSocket.send({}, 'users');
         },
-        sendMessage: function(from, to, subject, content) {
-            var message = {
-                from: {username: from},
-                subject: subject,
-                content: content,
-                date: new Date()
-            };
-
-            if (to) {
-                message.to = {username: to};
-            }
-
+        sendMessage: function(message) {
             WebSocket.send(message, 'message');
         },
         addOnMessageListener: function(onMessage) {

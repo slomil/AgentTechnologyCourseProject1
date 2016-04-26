@@ -60,7 +60,21 @@ appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $
     };
 
     $scope.send = function () {
-        Messages.sendMessage($rootScope.userId, $scope.selectedUser, $scope.subject, $scope.content);
+        var message = {
+            from: {username: $rootScope.userId},
+            subject: $scope.subject,
+            content: $scope.content,
+            date: new Date()
+        };
+
+        if ($scope.selectedUser) {
+            message.to = {username: $scope.selectedUser};
+            if (message.to.username !== message.from.username) {
+                $scope.messages.push(message);
+            }
+        }
+
+        Messages.sendMessage(message);
     };
 
     $scope.logout = function () {
@@ -74,6 +88,14 @@ appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $
             function (response) {
                 alert(response.message);
             });
+    };
+
+    $scope.selectUser = function (username) {
+        if ($scope.selectedUser === username) {
+            $scope.selectedUser = null;
+        } else {
+            $scope.selectedUser = username;
+        }
     };
 
     $scope.init();

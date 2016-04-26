@@ -9,7 +9,8 @@
     <div id="Main" class="row">
         <div class="col-md-4">
             <div id="Users" class="p-20">
-                <div ng-repeat="user in users">
+                <div ng-repeat="user in users" ng-click="selectUser(user)">
+                    <span ng-show="user == selectedUser" class="glyphicon glyphicon-comment" style="color: #A6ECAB"></span>
                     <span class="user">{{user}}</span>
                 </div>
             </div>
@@ -19,7 +20,7 @@
             <div id="Messages" class="p-10">
                 <div ng-repeat="message in messages">
                     <span class="user">{{message.from.username}}</span>
-                    <span class="date">[{{message.date | date: 'HH::mm:ss'}}]</span>
+                    <span class="date">[{{message.date | date: 'medium'}}]</span>
                     <span class="content">{{message.content}}</span>
                 </div>
             </div>

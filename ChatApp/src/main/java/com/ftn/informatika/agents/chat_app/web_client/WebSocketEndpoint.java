@@ -146,7 +146,7 @@ public class WebSocketEndpoint {
         User to = message.getTo();
 
         if (to != null) {
-            to = userSessionDbBean.get(to).getUser();
+            to = activeUsersDbBean.getUser(to);
             Host host = to.getHost();
             MessageRequester.publish(host.getAddress(), message);
         } else {

@@ -36,6 +36,11 @@ public class ActiveUsersDbBean implements ActiveUsersDbLocal {
         users.remove(user.getUsername());
     }
 
+    @Override
+    public User getUser(User to) {
+        return users.get(to.getUsername());
+    }
+
     @Lock(LockType.READ)
     @Override
     public List<User> getUsers() {
