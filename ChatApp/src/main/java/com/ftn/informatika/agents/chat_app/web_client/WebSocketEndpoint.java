@@ -17,6 +17,8 @@ import com.google.gson.Gson;
 
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
+import javax.jms.JMSException;
+import javax.jws.soap.SOAPBinding;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -82,6 +84,18 @@ public class WebSocketEndpoint {
     @OnClose
     public void onClose(Session session) {
         System.out.println("Removed session with ID " + session.getId());
+        if (userSessionDbBean.containsSession(session)) {
+            User user = userSessionDbBean.get(session).getUser();
+            if (serverManagementBean.isMaster()) {
+                try {
+                    userAppJmsBean.logout(user);
+                } catch (JMSException e) {
+                    System.err.println("JmsException: " + e.getMessage());
+                }
+            } else {
+                UserAppRequester.logout(serverManagementBean.getMasterAddress(), user);
+            }
+        }
     }
 
     @OnError

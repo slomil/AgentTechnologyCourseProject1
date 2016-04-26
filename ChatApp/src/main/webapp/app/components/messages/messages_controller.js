@@ -47,6 +47,10 @@ appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $
         });
 
         Messages.addOnRemovedUserListener(function (response) {
+            if (response.data.username === $scope.selectedUser) {
+                $scope.selectedUser = null;
+            }
+
             for (var user in $scope.users) {
                 if ($scope.users.hasOwnProperty(user)) {
                     if ($scope.users[user] === response.data.username) {
