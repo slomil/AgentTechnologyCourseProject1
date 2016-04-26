@@ -1,7 +1,7 @@
 package com.ftn.informatika.agents.chat_app.cluster_management;
 
 import com.ftn.informatika.agents.chat_app.db_beans.HostsDbLocal;
-import com.ftn.informatika.agents.chat_app.requestors.ClusterManagementRequester;
+import com.ftn.informatika.agents.chat_app.requesters.ClusterManagementRequester;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
 import com.ftn.informatika.agents.exception.AliasExistsException;
 import com.ftn.informatika.agents.exception.HostNotExistsException;

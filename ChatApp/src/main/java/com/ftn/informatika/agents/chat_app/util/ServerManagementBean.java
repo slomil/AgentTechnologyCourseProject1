@@ -1,9 +1,9 @@
 package com.ftn.informatika.agents.chat_app.util;
 
-import com.ftn.informatika.agents.chat_app.requestors.ClusterManagementRequester;
+import com.ftn.informatika.agents.chat_app.requesters.ClusterManagementRequester;
 import com.ftn.informatika.agents.chat_app.db_beans.HostsDbLocal;
 import com.ftn.informatika.agents.chat_app.jms_user_queue.UserAppJmsLocal;
-import com.ftn.informatika.agents.chat_app.requestors.UserAppRequester;
+import com.ftn.informatika.agents.chat_app.requesters.UserAppRequester;
 import com.ftn.informatika.agents.chat_app.db_beans.ActiveUsersDbLocal;
 import com.ftn.informatika.agents.exception.AliasExistsException;
 import com.ftn.informatika.agents.exception.HostNotExistsException;

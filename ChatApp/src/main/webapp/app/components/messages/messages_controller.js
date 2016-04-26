@@ -5,8 +5,9 @@ appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $
     "use strict";
     var reset = function () {
         $scope.selectedUser = null;
-        $scope.newMessage = "";
-        $scope.users = {};
+        $scope.subject = "";
+        $scope.content = "";
+        $scope.users = [];
         $scope.messages = [];
     };
 
@@ -19,30 +20,47 @@ appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $
     $scope.init = function () {
         Messages.getActiveUsers(function (response) {
             // Transform list to dictionary
-            var userIdx, user;
-            $scope.users = {};
-            for (userIdx in response.data) {
-                if (response.data.hasOwnProperty(userIdx)) {
-                    user = response.data[userIdx];
-                    $scope.users[user.username] = false;
+            $scope.users = [];
+            for (var user in response.data) {
+                if (response.data.hasOwnProperty(user)) {
+                    $scope.users.push(response.data[user].username);
                 }
             }
             $scope.$apply();
         });
 
+        Messages.addOnMessageListener(function (response) {
+            $scope.messages.push(response.data);
+            $scope.$apply();
+        });
+
         Messages.addOnNewUserListener(function (response) {
-            $scope.users[response.data.username] = false;
+            for (var user in $scope.users) {
+                if ($scope.users.hasOwnProperty(user)) {
+                    if ($scope.users[user] === response.data.username) {
+                        return;
+                    }
+                }
+            }
+            $scope.users.push(response.data.username);
             $scope.$apply();
         });
 
         Messages.addOnRemovedUserListener(function (response) {
-            delete $scope.users[response.data.username];
-            $scope.$apply();
+            for (var user in $scope.users) {
+                if ($scope.users.hasOwnProperty(user)) {
+                    if ($scope.users[user] === response.data.username) {
+                        $scope.users.splice(parseInt(user), 1);
+                        $scope.$apply();
+                        return;
+                    }
+                }
+            }
         })
     };
 
     $scope.send = function () {
-
+        Messages.sendMessage($rootScope.userId, $scope.selectedUser, $scope.subject, $scope.content);
     };
 
     $scope.logout = function () {
@@ -50,7 +68,7 @@ appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $
             function () {
                 $rootScope.userId = null;
                 reset();
-                $location.path('/login')
+                $location.path('/login');
                 $scope.$apply();
             },
             function (response) {

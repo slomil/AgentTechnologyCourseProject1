@@ -22,6 +22,31 @@ appMessagesModule.factory('Messages', function (WebSocket) {
 
             WebSocket.send({}, 'users');
         },
+        sendMessage: function(from, to, subject, content) {
+            var message = {
+                from: {username: from},
+                subject: subject,
+                content: content,
+                date: new Date()
+            };
+
+            if (to) {
+                message.to = {username: to};
+            }
+
+            WebSocket.send(message, 'message');
+        },
+        addOnMessageListener: function(onMessage) {
+            WebSocket.addOnMessageListener('message', function (data) {
+                var object = JSON.parse(data);
+                if (object.success) {
+                    object.data = JSON.parse(object.payload);
+                    if (onMessage) {
+                        onMessage(object);
+                    }
+                }
+            });
+        },
         addOnNewUserListener: function (onNewUser) {
             WebSocket.addOnMessageListener('new_user', function (data) {
                 var object = JSON.parse(data);

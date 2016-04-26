@@ -20,49 +20,62 @@ public class UserSessionDbBean implements UserSessionDbLocal {
     private HashMap<String, UserSession> userKeyMap = new HashMap<>();
 
     @Override
-    public void add(UserSession userSession) {
+    public boolean add(UserSession userSession) {
         String sessionKey = userSession.getSession().getId();
         String userKey = userSession.getUser().getUsername();
         if (sessionKeyMap.containsKey(sessionKey) || userKeyMap.containsKey(userKey)) {
-            return;
+            return false;
         }
 
         sessionKeyMap.put(sessionKey, userSession);
         userKeyMap.put(userKey, userSession);
+        return true;
     }
 
     @Override
-    public void remove(User user) {
+    public boolean remove(User user) {
         String userKey = user.getUsername();
         UserSession userSession = userKeyMap.get(userKey);
         if (userSession == null) {
-            return;
+            return false;
         }
 
         String sessionKey = userSession.getSession().getId();
         if (!sessionKeyMap.containsKey(sessionKey)) {
-            return;
+            return false;
         }
 
         userKeyMap.remove(userKey);
         sessionKeyMap.remove(sessionKey);
+        return true;
     }
 
     @Override
-    public void remove(Session session) {
+    public boolean remove(Session session) {
         String sessionKey = session.getId();
         UserSession userSession = sessionKeyMap.get(sessionKey);
         if (userSession == null) {
-            return;
+            return false;
         }
 
         String userKey = userSession.getUser().getUsername();
         if (!userKeyMap.containsKey(userKey)) {
-            return;
+            return false;
         }
 
         userKeyMap.remove(userKey);
         sessionKeyMap.remove(sessionKey);
+        return true;
+    }
+
+    @Override
+    public UserSession get(User user) {
+        return userKeyMap.get(user.getUsername());
+    }
+
+    @Override
+    public UserSession get(Session session) {
+        return sessionKeyMap.get(session.getId());
     }
 
     @Override

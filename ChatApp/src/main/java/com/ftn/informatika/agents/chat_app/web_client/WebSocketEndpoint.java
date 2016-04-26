@@ -2,13 +2,16 @@ package com.ftn.informatika.agents.chat_app.web_client;
 
 import com.ftn.informatika.agents.chat_app.db_beans.HostsDbLocal;
 import com.ftn.informatika.agents.chat_app.db_beans.UserSessionDbLocal;
-import com.ftn.informatika.agents.chat_app.requestors.ActiveUsersManagementRequester;
+import com.ftn.informatika.agents.chat_app.requesters.ActiveUsersManagementRequester;
 import com.ftn.informatika.agents.chat_app.db_beans.ActiveUsersDbLocal;
-import com.ftn.informatika.agents.chat_app.db_beans.MessageObjectsDbLocal;
+import com.ftn.informatika.agents.chat_app.db_beans.MessageSessionDbLocal;
 import com.ftn.informatika.agents.chat_app.jms_user_queue.UserAppJmsLocal;
-import com.ftn.informatika.agents.chat_app.requestors.UserAppRequester;
+import com.ftn.informatika.agents.chat_app.requesters.MessageRequester;
+import com.ftn.informatika.agents.chat_app.requesters.UserAppRequester;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
 import com.ftn.informatika.agents.jms_messages.JmsMessage;
+import com.ftn.informatika.agents.model.Host;
+import com.ftn.informatika.agents.model.Message;
 import com.ftn.informatika.agents.model.User;
 import com.google.gson.Gson;
 
@@ -27,7 +30,7 @@ import java.util.List;
 public class WebSocketEndpoint {
 
     @EJB
-    private UserSessionDbLocal sessionsDbBean;
+    private UserSessionDbLocal userSessionDbBean;
     @EJB
     private UserAppJmsLocal userAppJmsBean;
     @EJB
@@ -35,7 +38,7 @@ public class WebSocketEndpoint {
     @EJB
     private ActiveUsersDbLocal activeUsersDbBean;
     @EJB
-    private MessageObjectsDbLocal messageObjectsDbBean;
+    private MessageSessionDbLocal messageObjectsDbBean;
     @EJB
     private ServerManagementLocal serverManagementBean;
 
@@ -97,6 +100,9 @@ public class WebSocketEndpoint {
                 UserAppRequester.login(serverManagementBean.getMasterAddress(), user.getUsername(), user.getPassword(), serverManagementBean.getHost());
                 session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.LOGIN, user, true)));
                 hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.addUser(h.getAddress(), user));
+                if (!userSessionDbBean.add(new UserSessionDbLocal.UserSession(session, user))) {
+                    throw new Exception("Server error, can not add user for specified session.");
+                }
             }
         } catch (Exception e) {
             session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.ERROR, e.getClass().getSimpleName(), false)));
@@ -128,6 +134,7 @@ public class WebSocketEndpoint {
                 UserAppRequester.logout(serverManagementBean.getMasterAddress(), user);
                 session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.LOGOUT, null, true)));
                 hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.removeUser(h.getAddress(), user));
+                userSessionDbBean.remove(user);
             }
         } catch (Exception e) {
             session.getBasicRemote().sendText(new Gson().toJson(new WebsocketPacket(WebsocketPacket.ERROR, e.getClass().getSimpleName(), false)));
@@ -135,7 +142,16 @@ public class WebSocketEndpoint {
     }
 
     private void handleMessagePayload(String payload, Session session) {
+        Message message = new Gson().fromJson(payload, Message.class);
+        User to = message.getTo();
 
+        if (to != null) {
+            to = userSessionDbBean.get(to).getUser();
+            Host host = to.getHost();
+            MessageRequester.publish(host.getAddress(), message);
+        } else {
+            hostsDbBean.getHosts().forEach(h -> MessageRequester.publish(h.getAddress(), message));
+        }
     }
 
     private void handleUsersPayload(String payload, Session session) throws IOException {

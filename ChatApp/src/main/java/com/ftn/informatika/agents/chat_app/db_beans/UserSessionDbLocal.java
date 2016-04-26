@@ -40,9 +40,11 @@ public interface UserSessionDbLocal {
         }
     }
 
-    void add(UserSession userSession);
-    void remove(User user);
-    void remove(Session session);
+    boolean add(UserSession userSession);
+    boolean remove(User user);
+    boolean remove(Session session);
+    UserSession get(User user);
+    UserSession get(Session session);
 
     List<UserSession> getUserSessions();
     List<Session> getSessions();

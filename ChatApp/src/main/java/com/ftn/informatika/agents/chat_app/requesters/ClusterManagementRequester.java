@@ -1,4 +1,4 @@
-package com.ftn.informatika.agents.chat_app.requestors;
+package com.ftn.informatika.agents.chat_app.requesters;
 
 import com.ftn.informatika.agents.chat_app.util.ApplicationConfig;
 import com.ftn.informatika.agents.exception.AliasExistsException;

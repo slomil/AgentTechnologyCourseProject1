@@ -1,8 +1,9 @@
 package com.ftn.informatika.agents.chat_app.jms_user_queue;
 
 import com.ftn.informatika.agents.chat_app.db_beans.HostsDbLocal;
-import com.ftn.informatika.agents.chat_app.db_beans.MessageObjectsDbLocal;
-import com.ftn.informatika.agents.chat_app.requestors.ActiveUsersManagementRequester;
+import com.ftn.informatika.agents.chat_app.db_beans.MessageSessionDbLocal;
+import com.ftn.informatika.agents.chat_app.db_beans.UserSessionDbLocal;
+import com.ftn.informatika.agents.chat_app.requesters.ActiveUsersManagementRequester;
 import com.ftn.informatika.agents.chat_app.db_beans.ActiveUsersDbLocal;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
 import com.ftn.informatika.agents.chat_app.web_client.WebsocketPacket;
@@ -35,13 +36,15 @@ import java.util.List;
 public class UserReceiverMDBean implements MessageListener {
 
     @EJB
-    private MessageObjectsDbLocal messageObjectsDbBean;
+    private MessageSessionDbLocal messageObjectsDbBean;
     @EJB
     private ActiveUsersDbLocal usersDbBean;
     @EJB
     private HostsDbLocal hostsDbBean;
     @EJB
     private ServerManagementLocal serverManagementBean;
+    @EJB
+    private UserSessionDbLocal userSessionDbBean;
 
     @Override
     public void onMessage(Message message) {
@@ -55,7 +58,7 @@ public class UserReceiverMDBean implements MessageListener {
                 throw new UnsupportedMessageException();
             }
 
-            Object messageObject = messageObjectsDbBean.getMessage(((JmsMessage) object).getUuid());
+            Session session = messageObjectsDbBean.getMessage(((JmsMessage) object).getUuid());
             if (object instanceof GetActiveUsersMessage) {
                 List<User> users = ((GetActiveUsersMessage) object).getResponse();
                 usersDbBean.setUsers(users);
@@ -64,17 +67,23 @@ public class UserReceiverMDBean implements MessageListener {
                 hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.addUser(h.getAddress(), msg.getResponse()));
 
                 WebsocketPacket packet = new WebsocketPacket(WebsocketPacket.LOGIN, msg.getResponse(), true);
-                ((Session) messageObject).getBasicRemote().sendText(toJson(packet));
+                session.getBasicRemote().sendText(toJson(packet));
+
+                if (!userSessionDbBean.add(new UserSessionDbLocal.UserSession(session, msg.getResponse()))) {
+                    throw new Exception("Server error, can not add user for specified session.");
+                }
             } else if (object instanceof RegisterMessage) {
                 RegisterMessage msg = (RegisterMessage) object;
                 WebsocketPacket packet = new WebsocketPacket(WebsocketPacket.REGISTER, msg.getResponse(), true);
-                ((Session) messageObject).getBasicRemote().sendText(toJson(packet));
+                session.getBasicRemote().sendText(toJson(packet));
             } else if (object instanceof LogoutMessage) {
                 LogoutMessage msg = (LogoutMessage) object;
                 hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.removeUser(h.getAddress(), msg.getResponse()));
 
                 WebsocketPacket packet = new WebsocketPacket(WebsocketPacket.LOGOUT, msg.getResponse(), true);
-                ((Session) messageObject).getBasicRemote().sendText(toJson(packet));
+                session.getBasicRemote().sendText(toJson(packet));
+
+                userSessionDbBean.remove(msg.getResponse());
             } else {
                 throw new UnsupportedMessageException();
             }
@@ -85,6 +94,8 @@ public class UserReceiverMDBean implements MessageListener {
             System.err.println("Unsupported message.");
         } catch (IOException e) {
             System.err.println("Socket exception, message: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
 
     }
