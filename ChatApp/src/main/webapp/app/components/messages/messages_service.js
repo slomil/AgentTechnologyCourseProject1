@@ -36,8 +36,8 @@ appMessagesModule.factory('Messages', function (WebSocket) {
         addOnRemovedUserListener: function (onRemovedUser) {
             WebSocket.addOnMessageListener('removed_user', function(data) {
                var object = JSON.parse(data);
-                if (object.sucess) {
-                    object.data = JSON.parse(object.data);
+                if (object.success) {
+                    object.data = JSON.parse(object.payload);
                     if (onRemovedUser) {
                         onRemovedUser(object);
                     }

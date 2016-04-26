@@ -1,13 +1,16 @@
 /*global angular*/
 var appMessagesCtrlModule = angular.module('app.MessagesCtrl', []);
 
-appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $location, Messages) {
+appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $location, Messages, Login) {
     "use strict";
+    var reset = function () {
+        $scope.selectedUser = null;
+        $scope.newMessage = "";
+        $scope.users = {};
+        $scope.messages = [];
+    };
 
-    $scope.selectedUser = null;
-    $scope.newMessage = "";
-    $scope.users = {};
-    $scope.messages = [];
+    reset();
 
     if (!$rootScope.userId) {
         $location.path("/login");
@@ -40,6 +43,19 @@ appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $
 
     $scope.send = function () {
 
+    };
+
+    $scope.logout = function () {
+        Login.logout($rootScope.userId,
+            function () {
+                $rootScope.userId = null;
+                reset();
+                $location.path('/login')
+                $scope.$apply();
+            },
+            function (response) {
+                alert(response.message);
+            });
     };
 
     $scope.init();

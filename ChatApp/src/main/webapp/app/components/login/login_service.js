@@ -9,8 +9,10 @@ appLoginModule.factory('Login', function (WebSocket) {
             WebSocket.addOnMessageListener('login', function (data) {
                 var object = JSON.parse(data);
                 if (object.success) {
-                    object.data = JSON.parse(object.payload);
-                    onSuccess(object);
+                    if (onSuccess) {
+                        object.data = JSON.parse(object.payload);
+                        onSuccess(object);
+                    }
                 } else {
                     onError({message: object.payload});
                 }
@@ -20,6 +22,24 @@ appLoginModule.factory('Login', function (WebSocket) {
                 username: username,
                 password: password
             }, 'login')
+        },
+        logout: function (username, onSuccess, onError) {
+            WebSocket.addOnMessageListener('logout', function (data) {
+                var object = JSON.parse(data);
+                if (object.success) {
+                    if (onSuccess) {
+                        onSuccess(data);
+                    }
+                } else {
+                    if (onError) {
+                        onError({message: object.payload});
+                    }
+                }
+            });
+
+            WebSocket.send({
+                username: username
+            }, 'logout');
         }
     };
 

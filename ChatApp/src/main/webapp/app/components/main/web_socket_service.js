@@ -38,7 +38,11 @@ appWebSocketModule.factory('WebSocket', function ($location, $interval) {
             }
 
             if (socket.readyState != -1) {
-                socket.send(JSON.stringify(data));
+                try {
+                    socket.send(JSON.stringify(data));
+                } catch (ex) {
+                    console.log(ex);
+                }
             } else {
                 var intervalId = $interval(function () {
                     if (socket.readyState != -1) {
