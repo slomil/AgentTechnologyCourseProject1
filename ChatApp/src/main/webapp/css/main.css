@@ -26,6 +26,7 @@ body {
     color: #4178A7;
     font-weight: bold;
     font-size: x-large;
+    cursor: pointer;
 }
 
 #Messages {

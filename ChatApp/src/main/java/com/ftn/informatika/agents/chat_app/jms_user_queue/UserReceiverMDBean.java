@@ -1,10 +1,10 @@
 package com.ftn.informatika.agents.chat_app.jms_user_queue;
 
+import com.ftn.informatika.agents.chat_app.db_beans.ActiveUsersDbLocal;
 import com.ftn.informatika.agents.chat_app.db_beans.HostsDbLocal;
 import com.ftn.informatika.agents.chat_app.db_beans.MessageSessionDbLocal;
 import com.ftn.informatika.agents.chat_app.db_beans.UserSessionDbLocal;
 import com.ftn.informatika.agents.chat_app.requesters.ActiveUsersManagementRequester;
-import com.ftn.informatika.agents.chat_app.db_beans.ActiveUsersDbLocal;
 import com.ftn.informatika.agents.chat_app.util.ServerManagementLocal;
 import com.ftn.informatika.agents.chat_app.web_client.WebsocketPacket;
 import com.ftn.informatika.agents.exception.UnsupportedMessageException;
@@ -79,11 +79,9 @@ public class UserReceiverMDBean implements MessageListener {
             } else if (object instanceof LogoutMessage) {
                 LogoutMessage msg = (LogoutMessage) object;
                 hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.removeUser(h.getAddress(), msg.getResponse()));
-
+                userSessionDbBean.remove(msg.getResponse());
                 WebsocketPacket packet = new WebsocketPacket(WebsocketPacket.LOGOUT, msg.getResponse(), true);
                 session.getBasicRemote().sendText(toJson(packet));
-
-                userSessionDbBean.remove(msg.getResponse());
             } else {
                 throw new UnsupportedMessageException();
             }
@@ -93,9 +91,9 @@ public class UserReceiverMDBean implements MessageListener {
         } catch (UnsupportedMessageException e) {
             System.err.println("Unsupported message.");
         } catch (IOException e) {
-            System.err.println("Socket exception, message: " + e.getMessage());
+            System.err.println("Socket exception: " + e.getClass().getSimpleName()  + " \nMessage" + e.getMessage());
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            System.err.println("Exception: " + e.getClass().getSimpleName() + " \nMessage" + e.getMessage());
         }
 
     }
