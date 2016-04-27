@@ -25,14 +25,16 @@
                 </div>
             </div>
             <div id="NewMessage" class="p-10 row">
-                <div class="col-md-10">
-                    <div class="input-group" style="width: 100%">
-                        <input type="text" class="form-control" placeholder="Type message here" ng-model="content">
+                <form ng-submit="send()">
+                    <div class="col-md-10">
+                        <div class="input-group" style="width: 100%">
+                            <input type="text" class="form-control" placeholder="Type message here" ng-model="content">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-success" ng-click="send()" style="width: 100%">Send</button>
-                </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success" style="width: 100%">Send</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -52,7 +52,7 @@ public class WebSocketEndpoint {
 
         try {
             System.out.println("WebSocketEndpoint receiver message:" + message);
-            new WebsocketPacket();
+//            new WebsocketPacket();
             WebsocketPacket websocketPacket = new Gson().fromJson(message, WebsocketPacket.class);
             switch (websocketPacket.getType()) {
                 case WebsocketPacket.LOGIN:
@@ -94,6 +94,8 @@ public class WebSocketEndpoint {
                 }
             } else {
                 UserAppRequester.logout(serverManagementBean.getMasterAddress(), user);
+                hostsDbBean.getHosts().forEach(h -> ActiveUsersManagementRequester.removeUser(h.getAddress(), user));
+                userSessionDbBean.remove(user);
             }
         }
     }

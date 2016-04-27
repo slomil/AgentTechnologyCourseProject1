@@ -1,7 +1,7 @@
 /*global angular*/
 var appMessagesCtrlModule = angular.module('app.MessagesCtrl', []);
 
-appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $location, Messages, Login) {
+appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $location, Messages, Login, WebSocket) {
     "use strict";
     var reset = function () {
         $scope.selectedUser = null;
@@ -60,6 +60,10 @@ appMessagesCtrlModule.controller('MessagesCtrl', function ($rootScope, $scope, $
                     }
                 }
             }
+        });
+
+        WebSocket.setOnCloseListener(function () {
+            $location.path('/login');
         })
     };
 

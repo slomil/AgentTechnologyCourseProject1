@@ -5,9 +5,11 @@ appWebSocketModule.factory('WebSocket', function ($location, $interval) {
     "use strict";
 
     var socket = null,
-        onMessageListeners = {},
-        openSocket = function () {
-            socket = new WebSocket('ws://localhost:' + $location.port() + '/chat_app/data');
+        onMessageListeners = {};
+
+    return {
+        openSocket: function () {
+            socket = new WebSocket('ws://' + $location.host() + ":" + $location.port() + '/chat_app/data');
             socket.onmessage = function (event) {
                 var object = JSON.parse(event.data),
                     listener = onMessageListeners[object.type];
@@ -16,10 +18,7 @@ appWebSocketModule.factory('WebSocket', function ($location, $interval) {
                     listener(event.data);
                 }
             };
-        };
-
-    return {
-        openSocket: openSocket(),
+        },
         closeSocket: function () {
             socket.closeSocket();
             socket = null;
@@ -54,6 +53,12 @@ appWebSocketModule.factory('WebSocket', function ($location, $interval) {
         },
         addOnMessageListener: function (type, listener) {
             onMessageListeners[type] = listener;
+        },
+        setOnCloseListener: function (listener) {
+            socket.onclose = function() {
+                socket = null;
+                listener();
+            }
         }
     };
 
