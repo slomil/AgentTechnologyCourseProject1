@@ -13,7 +13,6 @@ appRegisterCtrlModule.controller('RegisterCtrl', function ($rootScope, $scope, $
     }
 
     $scope.successfulRegistration = function (data) {
-        $rootScope.userId = data.username;
         $scope.alertMessage = null;
         $location.path('/login');
         $scope.$apply();
