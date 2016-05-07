@@ -30,7 +30,7 @@ Set Host Name
 ### Example
 ```bash
 # Master Node
-.\standalone.bat -D"jboss.server.default.config"=standalone-agents.xml -Dlocal="192.168.0.1:8080" -D"alias=MasterNode"
+.\standalone.bat -D"jboss.server.default.config"=standalone-agents.xml -Dlocal="192.168.0.1:8080" -Dalias=MasterNode
 
 # Slave Node 1
 .\standalone.bat -D"jboss.server.default.config"=standalone-agents.xml -D"jboss.socket.binding.port-offset"=100 -Dmaster="192.168.0.1:8080" -Dalias=SlaveNode1
